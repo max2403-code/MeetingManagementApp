@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="CommandHandlers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MeetingManagementApp.Domain\MeetingManagementApp.Domain.csproj" />
     <ProjectReference Include="..\MeetingManagementApp.Storage\MeetingManagementApp.Storage.csproj" />
   </ItemGroup>

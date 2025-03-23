@@ -6,7 +6,7 @@ namespace MeetingManagementApp.Infrastructure.Services
     {
         private readonly object _locker = new();
 
-        public string ExecuteOnConsole(string value, Func<string, string> func)
+        public string ExecuteOnConsole<T>(T value, Func<T, string> func)
         {
             lock (_locker)
             {

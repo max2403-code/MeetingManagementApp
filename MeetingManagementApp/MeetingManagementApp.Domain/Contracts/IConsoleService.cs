@@ -2,6 +2,6 @@
 {
     public interface IConsoleService
     {
-        string ExecuteOnConsole(string value, Func<string, string> func);
+        string ExecuteOnConsole<T>(T value, Func<T, string> func);
     }
 }

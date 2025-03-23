@@ -4,8 +4,8 @@ namespace MeetingManagementApp.Domain.Contracts
 {
     public interface ICommandRequestHandler
     {
-        CommandHandlerResult Execute(string requestValue);
+        CommandHandlerResult Execute<T>(T requestValue);
 
-        string GetHandlerKey();
+        //string GetHandlerKey();
     }
 }
