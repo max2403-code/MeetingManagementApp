@@ -1,7 +1,9 @@
-﻿namespace MeetingManagementApp.Domain.Contracts
+﻿using MeetingManagementApp.Domain.Models.Common;
+
+namespace MeetingManagementApp.Domain.Contracts
 {
     public interface IConsoleService
     {
-        string ExecuteOnConsole<T>(T value, Func<T, string> func);
+        ConsoleCommandResult? ExecuteOnConsole(string? value, Func<string?, ConsoleCommandResult?> func, Func<string?, IReadOnlyDictionary<string, string>> allowCommandFunc);
     }
 }
