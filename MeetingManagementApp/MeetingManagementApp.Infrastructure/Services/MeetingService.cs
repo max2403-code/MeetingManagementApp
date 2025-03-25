@@ -26,7 +26,8 @@ namespace MeetingManagementApp.Infrastructure.Services
                     Id = x.Id,
                     MeetingStart = x.MeetingStart,
                     MeetingEnd = x.MeetingEnd,
-                    Description = x.Description
+                    Description = x.Description,
+                    Subject = x.Subject
                 })
                 .ToArray();
         }
@@ -40,7 +41,8 @@ namespace MeetingManagementApp.Infrastructure.Services
                 Id = entityIndex,
                 MeetingStart = meeting.MeetingStart,
                 MeetingEnd = meeting.MeetingEnd,
-                Description = meeting.Description
+                Description = meeting.Description,
+                Subject = meeting.Subject
             };
 
             _context.Meetings[entityIndex] = entity;
@@ -64,6 +66,9 @@ namespace MeetingManagementApp.Infrastructure.Services
             if (!string.IsNullOrEmpty(meeting.Description))
                 return "Описание встречи должно быть заполнено.";
 
+            if (!string.IsNullOrEmpty(meeting.Subject))
+                return "Заголовок встречи должен быть заполнен.";
+
             return null;
         }
 
@@ -83,47 +88,11 @@ namespace MeetingManagementApp.Infrastructure.Services
             _context.Meetings[meeting.Id.Value].MeetingStart = meeting.MeetingStart;
             _context.Meetings[meeting.Id.Value].MeetingEnd = meeting.MeetingEnd;
             _context.Meetings[meeting.Id.Value].Description = meeting.Description;
+            _context.Meetings[meeting.Id.Value].Subject = meeting.Subject;
 
             return 1;
         }
 
-        public int AddNewMeetingNotification(MeetingNotificationDTO notification)
-        {
-            var entity = new MeetingNotification
-            {
-                MeetingId = notification.MeetingId,
-                NotificationTime = notification.NotificationTime
-            };
-
-            _context.MeetingNotifications[notification.MeetingId] = entity;
-
-            return 1;
-        }
-
-        public int UpdateMeetingNotification(MeetingNotificationDTO notification)
-        {
-            _context.MeetingNotifications[notification.MeetingId].NotificationTime = notification.NotificationTime;
-
-            return 1;
-        }
-
-        public string? ValidateMeetingNotification(MeetingNotificationDTO notification)
-        {
-            if (!_context.Meetings.TryGetValue(notification.MeetingId, out var meeting))
-                return "Встречи для данного уведомления не существует.";
-
-            if (notification.NotificationTime < DateTime.Now || notification.NotificationTime >= meeting.MeetingStart)
-                return "Указано неверное время уведомления.";
-
-            return null;
-        }
-
-        public int RemoveMeetingNotification(int meetingId)
-        {
-            if (!_context.MeetingNotifications.Remove(meetingId))
-                throw new Exception("Данное уведомление отсутствует в списке либо уже удалено.");
-
-            return 1;
-        }
+        
     }
 }

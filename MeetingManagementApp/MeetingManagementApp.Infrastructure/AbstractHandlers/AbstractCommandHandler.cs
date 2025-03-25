@@ -6,18 +6,18 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
     internal abstract class AbstractCommandHandler : ICommandRequestHandler
     {
         private readonly IReadOnlyDictionary<string, ICommandRequestHandler> _nextHandlers;
-        private readonly IPrinterService _consoleService;
+        private readonly IPrinterService _printerService;
 
 
         public AbstractCommandHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService) 
         {
             _nextHandlers = nextHandlers;
-            _consoleService = consoleService;
+            _printerService = consoleService;
         }
 
         public CommandHandlerResult? Execute(string? requestValue)
         {
-            var consoleCommandResult = _consoleService.PrinterExecute(requestValue, GetConsoleCommandResult, GetAllowedCommands);
+            var consoleCommandResult = _printerService.PrinterExecute(requestValue, GetConsoleCommandResult, GetAllowedCommands);
 
             if (consoleCommandResult == null)
                 return null;

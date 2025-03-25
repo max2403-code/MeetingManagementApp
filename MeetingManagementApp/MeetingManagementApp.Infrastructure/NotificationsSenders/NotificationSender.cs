@@ -1,24 +1,56 @@
 ﻿using MeetingManagementApp.Domain.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MeetingManagementApp.Domain.Models.Common;
+using MeetingManagementApp.Domain.Models.DTO;
+using System.Text.Json;
 
 namespace MeetingManagementApp.Infrastructure.NotificationsSenders
 {
-    internal class NotificationSender : INotificationSender
+    internal class NotificationSender : IBackgroundService
     {
-        private readonly 
+        private readonly IPrinterService _printerService;
+        private readonly INotificationService _notificationService;
+        private readonly IMeetingController _meetingController;
 
-        public NotificationSender() 
+        public NotificationSender(IPrinterService printerService, INotificationService notificationService, IMeetingController meetingController)
         {
-        
+            _printerService = printerService;
+            _notificationService = notificationService;
+            _meetingController = meetingController;
         }
 
-        public Task RunSender()
+        public void Run()
         {
-            throw new NotImplementedException();
+            while (true)
+            {
+                foreach (var notification in _notificationService.GetMeetingNotifications())
+                {
+                    var notificationJson = JsonSerializer.Serialize(notification);
+
+                    _printerService.PrinterExecute(notificationJson, PrinterHandler);
+                }
+            }
+        }
+
+        private CommandResult? PrinterHandler(string? notificationJson)
+        {
+            var notification = JsonSerializer.Deserialize<MeetingNotificationDTO>(notificationJson);
+            var meeting = _meetingController.GetMeetingById(notification.MeetingId);
+
+            Console.WriteLine();
+
+            Console.WriteLine(new string('-', 20));
+
+            Console.WriteLine("Напоминание");
+
+            Console.WriteLine($"{meeting.Subject}");
+
+            Console.WriteLine($"Время начала встречи: {meeting.MeetingStart:dd.MM.yyyy HH:mm}");
+
+            Console.WriteLine(new string('-', 20));
+
+            Console.WriteLine();
+
+            return null;
         }
     }
 }

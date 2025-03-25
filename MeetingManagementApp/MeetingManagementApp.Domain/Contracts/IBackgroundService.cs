@@ -1,7 +1,7 @@
 ﻿namespace MeetingManagementApp.Domain.Contracts
 {
-    public interface INotificationSender
+    public interface IBackgroundService
     {
-        Task RunSender();
+        void Run();
     }
 }

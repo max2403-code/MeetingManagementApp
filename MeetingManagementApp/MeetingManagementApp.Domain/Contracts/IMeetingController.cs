@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MeetingManagementApp.Domain.Models.DTO;
 
 namespace MeetingManagementApp.Domain.Contracts
 {
     public interface IMeetingController
     {
+        MeetingDTO GetMeetingById(int id);
     }
 }

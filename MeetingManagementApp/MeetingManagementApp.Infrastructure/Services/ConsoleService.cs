@@ -23,13 +23,15 @@ namespace MeetingManagementApp.Infrastructure.Services
             }
         }
 
-        public string? GetUserCommand(IReadOnlyCollection<string> commands) 
+        private string? GetUserCommand(IReadOnlyCollection<string> commands) 
         {
             Console.WriteLine(new string('-', 20));
             Console.WriteLine("Выберите команду:");
 
             foreach (var command in commands)
                 Console.WriteLine(command);
+
+            Console.WriteLine("Команда:");
 
             return Console.ReadLine();
         }

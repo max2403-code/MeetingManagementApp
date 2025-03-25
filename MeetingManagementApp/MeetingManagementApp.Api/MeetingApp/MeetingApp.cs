@@ -17,20 +17,20 @@ namespace MeetingManagementApp.Api.MeetingApp
         public void Run()
         {
             var handler = _startHandler;
-            string? requestValue = null;
+            string? commandResultValue = null;
 
             while (handler != null) 
             {
                 try
                 {
-                    var commandResult = handler.Execute(requestValue);
+                    var commandResult = handler.Execute(commandResultValue);
 
                     handler = commandResult?.NextCommandRequestHandler;
-                    requestValue = commandResult?.Result;
+                    commandResultValue = commandResult?.Result;
                 }
                 catch(BusinessException ex)
                 {
-                    requestValue = ex.Value;
+                    commandResultValue = ex.Value;
                     _exceptionHandler.Execute(ex.Message);
                 }
                 catch(Exception ex) 
