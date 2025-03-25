@@ -35,7 +35,9 @@ namespace MeetingManagementApp.Api.MeetingApp
                 }
                 catch(Exception ex) 
                 {
-                    _exceptionHandler.Execute(ex.Message);
+                    var exCommandResult = _exceptionHandler.Execute(ex.Message);
+                    handler = exCommandResult?.NextCommandRequestHandler;
+                    commandResultValue = exCommandResult?.Result;
                 }
             }
 

@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 
 namespace MeetingManagementApp.Infrastructure.Services
 {
-    public class MeetingNotificationService : INotificationService
+    internal class MeetingNotificationService : INotificationService
     {
         private readonly MeetingStorageContext _context;
         private readonly ConcurrentDictionary<int, MeetingNotificationDTO> _notifications;
@@ -51,7 +51,7 @@ namespace MeetingManagementApp.Infrastructure.Services
             if (!_context.Meetings.TryGetValue(notification.MeetingId, out var meeting))
                 return "Встречи для данного уведомления не существует.";
 
-            if (notification.NotificationTime < DateTime.Now || notification.NotificationTime >= meeting.MeetingStart)
+            if (notification.NotificationTime < DateTime.Now || notification.NotificationTime > meeting.MeetingStart)
                 return "Указано неверное время уведомления.";
 
             return null;

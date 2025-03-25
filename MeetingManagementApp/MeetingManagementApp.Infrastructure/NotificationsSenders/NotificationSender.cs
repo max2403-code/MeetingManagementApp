@@ -26,7 +26,7 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
                 {
                     var notificationJson = JsonSerializer.Serialize(notification);
 
-                    _printerService.PrinterExecute(notificationJson, PrinterHandler);
+                    Task.Run(() => _printerService.PrinterExecute(notificationJson, PrinterHandler));
                 }
             }
         }

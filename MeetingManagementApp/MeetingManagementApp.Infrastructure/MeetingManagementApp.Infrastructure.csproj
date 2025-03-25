@@ -11,8 +11,4 @@
     <ProjectReference Include="..\MeetingManagementApp.Storage\MeetingManagementApp.Storage.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CommandHandlers\" />
-  </ItemGroup>
-
 </Project>
