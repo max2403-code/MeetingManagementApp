@@ -6,10 +6,10 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
     internal abstract class AbstractCommandHandler : ICommandRequestHandler
     {
         private readonly IReadOnlyDictionary<string, ICommandRequestHandler> _nextHandlers;
-        private readonly IConsoleService _consoleService;
+        private readonly IPrinterService _consoleService;
 
 
-        public AbstractCommandHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IConsoleService consoleService) 
+        public AbstractCommandHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService) 
         {
             _nextHandlers = nextHandlers;
             _consoleService = consoleService;
@@ -17,7 +17,7 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
 
         public CommandHandlerResult? Execute(string? requestValue)
         {
-            var consoleCommandResult = _consoleService.ExecuteOnConsole(requestValue, GetConsoleCommandResult, GetAllowedCommands);
+            var consoleCommandResult = _consoleService.PrinterExecute(requestValue, GetConsoleCommandResult, GetAllowedCommands);
 
             if (consoleCommandResult == null)
                 return null;
@@ -34,7 +34,7 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
             };
         }
 
-        protected abstract ConsoleCommandResult? GetConsoleCommandResult(string? value);
+        protected abstract CommandResult? GetConsoleCommandResult(string? value);
 
         protected abstract IReadOnlyDictionary<string, string> GetAllowedCommands(string? requestValue);
 
