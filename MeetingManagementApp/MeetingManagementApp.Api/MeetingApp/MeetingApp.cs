@@ -25,8 +25,8 @@ namespace MeetingManagementApp.Api.MeetingApp
                 {
                     var commandResult = handler.Execute(commandResultValue);
 
-                    handler = commandResult?.NextCommandRequestHandler;
-                    commandResultValue = commandResult?.Result;
+                    handler = commandResult.NextCommandRequestHandler;
+                    commandResultValue = commandResult.Result;
                 }
                 catch(BusinessException ex)
                 {
@@ -36,8 +36,8 @@ namespace MeetingManagementApp.Api.MeetingApp
                 catch(Exception ex) 
                 {
                     var exCommandResult = _exceptionHandler.Execute(ex.Message);
-                    handler = exCommandResult?.NextCommandRequestHandler;
-                    commandResultValue = exCommandResult?.Result;
+                    handler = exCommandResult.NextCommandRequestHandler;
+                    commandResultValue = exCommandResult.Result;
                 }
             }
 

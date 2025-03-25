@@ -16,5 +16,25 @@ namespace MeetingManagementApp.Infrastructure.Controllers
         {
             return _meetingService.GetMeetingById(id);
         }
+
+        public string? ValidateMeetingDescription(string? description)
+        {
+            return _meetingService.ValidateMeetingDescription(description);
+        }
+
+        public string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd)
+        {
+            return _meetingService.ValidateMeetingMeetingEnd(meetingStart, meetingEnd);
+        }
+
+        public string? ValidateMeetingMeetingStart(DateTime meetingStart)
+        {
+            return _meetingService.ValidateMeetingMeetingStart(meetingStart);
+        }
+
+        public string? ValidateMeetingSubject(string? subject)
+        {
+            return _meetingService.ValidateMeetingSubject(subject);
+        }
     }
 }

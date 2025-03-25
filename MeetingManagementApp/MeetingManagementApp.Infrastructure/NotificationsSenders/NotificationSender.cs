@@ -31,7 +31,7 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
             }
         }
 
-        private CommandResult? PrinterHandler(string? notificationJson)
+        private CommandResult PrinterHandler(string? notificationJson)
         {
             var notification = JsonSerializer.Deserialize<MeetingNotificationDTO>(notificationJson);
             var meeting = _meetingController.GetMeetingById(notification.MeetingId);
@@ -50,7 +50,7 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
 
             Console.WriteLine();
 
-            return null;
+            return new CommandResult();
         }
     }
 }

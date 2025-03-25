@@ -74,5 +74,17 @@ namespace MeetingManagementApp.Infrastructure.Services
 
             return _notifications.Where(x => x.Value.NotificationTime >= notificationRangeFrom && x.Value.NotificationTime <= notificationRangeTo).Select(x => x.Value).ToArray();
         }
+
+        public MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId)
+        {
+            if (_context.MeetingNotifications.TryGetValue(meetingId, out var value) || value == null)
+                throw new Exception("Запрашиваемое уведомление отсутствует.");
+
+            return new MeetingNotificationDTO
+            {
+                MeetingId = meetingId,
+                NotificationTime = value.NotificationTime
+            } ;
+        }
     }
 }

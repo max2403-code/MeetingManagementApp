@@ -4,7 +4,7 @@ namespace MeetingManagementApp.Domain.Contracts
 {
     public interface ICommandRequestHandler
     {
-        CommandHandlerResult? Execute(string? requestValue);
+        CommandHandlerResult Execute(string? requestValue);
 
         string? GetCommandDescription() => null;
 

@@ -53,27 +53,69 @@ namespace MeetingManagementApp.Infrastructure.Services
             return entityIndex;
         }
 
-        public string? ValidateMeeting(MeetingDTO meeting)
+        //public string? ValidateMeeting(MeetingDTO meeting)
+        //{
+        //    if (meeting.MeetingStart < DateTime.Now)
+        //        return "Встречу можно планировать только в будущем.";
+
+        //    var isMeetingExist = _context.Meetings.Values.Any(x =>
+        //        x.MeetingStart <= meeting.MeetingStart && x.MeetingEnd >= meeting.MeetingStart ||
+        //        x.MeetingStart <= meeting.MeetingEnd && x.MeetingEnd >= meeting.MeetingEnd ||
+        //        x.MeetingStart <= meeting.MeetingStart && x.MeetingEnd >= meeting.MeetingEnd);
+
+        //    if (isMeetingExist)
+        //        return "На данный промежуток времени уже запланирована другая встреча.";
+
+        //    if (meeting.MeetingStart >= meeting.MeetingEnd)
+        //        return "Окончание встречи не может быть раньше ее начала.";
+
+        //    if (!string.IsNullOrEmpty(meeting.Description))
+        //        return "Описание встречи должно быть заполнено.";
+
+        //    if (!string.IsNullOrEmpty(meeting.Subject))
+        //        return "Заголовок встречи должен быть заполнен.";
+
+        //    return null;
+        //}
+
+        public string? ValidateMeetingSubject(string? subject)
         {
-            if (meeting.MeetingStart < DateTime.Now)
+            if (!string.IsNullOrEmpty(subject))
+                return "Заголовок встречи должен быть заполнен.";
+            return null;
+        }
+
+        public string? ValidateMeetingDescription(string? description)
+        {
+            if (!string.IsNullOrEmpty(description))
+                return "Заголовок встречи должен быть заполнен.";
+            return null;
+        }
+
+        public string? ValidateMeetingMeetingStart(DateTime meetingStart)
+        {
+            if (meetingStart < DateTime.Now)
                 return "Встречу можно планировать только в будущем.";
 
-            var isMeetingExist = _context.Meetings.Values.Any(x =>
-                x.MeetingStart <= meeting.MeetingStart && x.MeetingEnd >= meeting.MeetingStart ||
-                x.MeetingStart <= meeting.MeetingEnd && x.MeetingEnd >= meeting.MeetingEnd ||
-                x.MeetingStart <= meeting.MeetingStart && x.MeetingEnd >= meeting.MeetingEnd);
+            var isMeetingExist = _context.Meetings.Values.Any(x => x.MeetingStart <= meetingStart && x.MeetingEnd >= meetingStart);
 
             if (isMeetingExist)
                 return "На данный промежуток времени уже запланирована другая встреча.";
 
-            if (meeting.MeetingStart >= meeting.MeetingEnd)
-                return "Окончание встречи не может быть раньше ее начала.";
+            return null;
+        }
 
-            if (!string.IsNullOrEmpty(meeting.Description))
-                return "Описание встречи должно быть заполнено.";
+        public string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd)
+        {
+            if (meetingEnd <= meetingStart)
+                return "Окончание встречи не может быть равно или раньше ее начала.";
 
-            if (!string.IsNullOrEmpty(meeting.Subject))
-                return "Заголовок встречи должен быть заполнен.";
+            var isMeetingExist = _context.Meetings.Values.Any(x => 
+                x.MeetingStart <= meetingEnd && x.MeetingEnd >= meetingEnd || 
+                x.MeetingStart >= meetingStart && x.MeetingEnd <= meetingEnd);
+
+            if (isMeetingExist)
+                return "На данный промежуток времени уже запланирована другая встреча.";
 
             return null;
         }

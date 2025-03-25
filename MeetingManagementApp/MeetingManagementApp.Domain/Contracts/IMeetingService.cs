@@ -8,8 +8,14 @@ namespace MeetingManagementApp.Domain.Contracts
         
         int AddNewMeeting(MeetingDTO meeting);
 
-        string? ValidateMeeting(MeetingDTO meeting);
-        
+        string? ValidateMeetingSubject(string? subject);
+
+        string? ValidateMeetingDescription(string? description);
+
+        string? ValidateMeetingMeetingStart(DateTime meetingStart);
+
+        string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd);
+
         int RemoveMeeting(int id);
 
         int UpdateMeeting(MeetingDTO meeting);

@@ -6,7 +6,6 @@
         public DateTime MeetingStart { get; set; }
         public DateTime MeetingEnd { get; set; }
         public string Subject { get; set; }
-
         public string Description { get; set; }
     }
 }
