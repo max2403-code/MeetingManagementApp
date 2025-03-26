@@ -12,9 +12,19 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             _meetingService = meetingService;
         }
 
+        public int AddNewMeeting(MeetingDTO meeting)
+        {
+            return _meetingService.AddNewMeeting(meeting);
+        }
+
         public MeetingDTO GetMeetingById(int id)
         {
             return _meetingService.GetMeetingById(id);
+        }
+
+        public IReadOnlyCollection<MeetingDTO> GetMeetingsOnDate(DateTime date)
+        {
+            return _meetingService.GetMeetingsOnDate(date);
         }
 
         public string? ValidateMeetingDescription(string? description)

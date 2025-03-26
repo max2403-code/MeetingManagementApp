@@ -20,7 +20,7 @@ namespace MeetingManagementApp.Infrastructure.Services
                 {
                     var notAllowCommandsSet = notAllowCommandFunc(funcValue.ResultValue);
 
-                    if (notAllowCommandsSet != null)
+                    if (notAllowCommandsSet != null && notAllowCommandsSet.Count > 0)
                         commands = commands.Where(x => !notAllowCommandsSet.Contains(x.command)).Select(x => (x.command, x.description)).ToArray();
                 }
                 

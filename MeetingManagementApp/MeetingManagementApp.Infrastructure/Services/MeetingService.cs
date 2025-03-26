@@ -30,7 +30,12 @@ namespace MeetingManagementApp.Infrastructure.Services
                     MeetingStart = x.MeetingStart,
                     MeetingEnd = x.MeetingEnd,
                     Description = x.Description,
-                    Subject = x.Subject
+                    Subject = x.Subject,
+                    MeetingNotification = _context.MeetingNotifications.TryGetValue(x.Id, out var val) ? new MeetingNotificationDTO
+                    {
+                        MeetingId = val.MeetingId,
+                        NotificationTime = val.NotificationTime
+                    } : null
                 })
                 .ToArray();
         }
@@ -159,7 +164,12 @@ namespace MeetingManagementApp.Infrastructure.Services
                 Description = meeting.Description,
                 Subject = meeting.Subject,
                 MeetingStart = meeting.MeetingStart,
-                MeetingEnd = meeting.MeetingEnd
+                MeetingEnd = meeting.MeetingEnd,
+                MeetingNotification = _context.MeetingNotifications.TryGetValue(id, out var val) ? new MeetingNotificationDTO
+                {
+                    MeetingId = val.MeetingId,
+                    NotificationTime = val.NotificationTime
+                } : null
             };
         }
 

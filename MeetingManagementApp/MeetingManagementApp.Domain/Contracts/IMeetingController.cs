@@ -4,6 +4,8 @@ namespace MeetingManagementApp.Domain.Contracts
 {
     public interface IMeetingController
     {
+        public IReadOnlyCollection<MeetingDTO> GetMeetingsOnDate(DateTime date);
+        int AddNewMeeting(MeetingDTO meeting);
         MeetingDTO GetMeetingById(int id);
 
         string? ValidateMeetingSubject(string? subject);

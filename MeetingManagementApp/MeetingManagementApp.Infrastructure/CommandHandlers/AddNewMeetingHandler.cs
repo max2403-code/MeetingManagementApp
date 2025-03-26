@@ -42,8 +42,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             {
                 Console.Write("Введите дату: ");
 
-                var onDateInput = Console.ReadLine();
-                onDate = DateTime.TryParse(onDateInput, out var val) ? val.Date : throw new BusinessException("Введена неверная дата");
+                var onDateInput = Console.ReadLine()?.Split(".");
+
+                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("/", onDateInput[1], onDateInput[0], onDateInput[2]), out var val) ? val.Date : throw new BusinessException("Введена неверная дата.");
                 meeting.OnDate = onDate;
             }
 
@@ -89,7 +90,63 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 meeting.Description = description;
             }
 
+            var meetingStart = meeting.MeetingStart;
 
+            if (meetingStart.HasValue)
+            {
+                Console.Write("Время начала встречи: ");
+
+                Console.WriteLine($"{meetingStart.Value:HH:mm}");
+            }
+            else
+            {
+                Console.Write("Введите время начала встречи: ");
+
+                var meetingStartInput = Console.ReadLine();
+                meetingStart = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("MM/dd/yyyy"), meetingStartInput), out var val) ? val.Date : throw new BusinessException("Введено неверное время начала встречи.");
+
+                var error = _meetingController.ValidateMeetingMeetingStart(meetingStart.Value);
+
+                if (!string.IsNullOrEmpty(error))
+                    throw new BusinessException(error, JsonSerializer.Serialize(meeting));
+
+                meeting.MeetingStart = meetingStart;
+            }
+
+            var meetingEnd = meeting.MeetingEnd;
+
+            if (meetingEnd.HasValue)
+            {
+                Console.Write("Примерное время окончания встречи: ");
+
+                Console.WriteLine($"{meetingEnd.Value:HH:mm}");
+            }
+            else
+            {
+                Console.Write("Введите примерное время окончания встречи: ");
+
+                var meetingEndInput = Console.ReadLine();
+                meetingEnd = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("MM/dd/yyyy"), meetingEndInput), out var val) ? val.Date : throw new BusinessException("Введено неверное время начала встречи.");
+
+                var error = _meetingController.ValidateMeetingMeetingEnd(meetingStart.Value, meetingEnd.Value);
+
+                if (!string.IsNullOrEmpty(error))
+                    throw new BusinessException(error, JsonSerializer.Serialize(meeting));
+
+                meeting.MeetingEnd = meetingEnd;
+            }
+
+            meeting.Id = _meetingController.AddNewMeeting(new MeetingDTO
+            {
+                Subject = meeting.Subject,
+                Description = meeting.Description,
+                MeetingStart = meeting.MeetingStart.Value,
+                MeetingEnd = meeting.MeetingEnd.Value
+            });
+
+            Console.WriteLine();
+
+            Console.WriteLine("Встреча успешно добавлена.");
 
             return new CommandResult
             {
