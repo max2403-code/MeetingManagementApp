@@ -1,5 +1,6 @@
 ﻿using MeetingManagementApp.Domain.Contracts;
 using MeetingManagementApp.Domain.Models.DTO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MeetingManagementApp.Infrastructure.Controllers
 {
@@ -17,9 +18,9 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             return _meetingService.AddNewMeeting(meeting);
         }
 
-        public MeetingDTO GetMeetingById(int id)
+        public MeetingDTO GetMeetingById(int id, DateTime? onDate = null)
         {
-            return _meetingService.GetMeetingById(id);
+            return _meetingService.GetMeetingById(id, onDate);
         }
 
         public IReadOnlyCollection<MeetingDTO> GetMeetingsOnDate(DateTime date)

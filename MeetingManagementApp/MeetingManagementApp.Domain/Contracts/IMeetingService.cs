@@ -20,7 +20,7 @@ namespace MeetingManagementApp.Domain.Contracts
 
         int UpdateMeeting(MeetingDTO meeting);
 
-        MeetingDTO GetMeetingById(int id);
+        MeetingDTO GetMeetingById(int id, DateTime? onDate = null);
 
         Task SaveMeetingsOnDateFileAsync(DateTime onDate, string folderPath);
     }

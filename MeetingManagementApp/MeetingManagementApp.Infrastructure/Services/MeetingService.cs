@@ -153,24 +153,38 @@ namespace MeetingManagementApp.Infrastructure.Services
             return 1;
         }
 
-        public MeetingDTO GetMeetingById(int id)
+        public MeetingDTO GetMeetingById(int id, DateTime? onDate = null)
         {
-            if (!_context.Meetings.TryGetValue(id, out var meeting))
-                throw new Exception("Данной встречи не существует.");
+             MeetingDTO meeting;
 
-            return new MeetingDTO
+            if (onDate.HasValue)
             {
-                Id = meeting.Id,
-                Description = meeting.Description,
-                Subject = meeting.Subject,
-                MeetingStart = meeting.MeetingStart,
-                MeetingEnd = meeting.MeetingEnd,
-                MeetingNotification = _context.MeetingNotifications.TryGetValue(id, out var val) ? new MeetingNotificationDTO
+                var meetingsOnDateMap = GetMeetingsOnDate(onDate.Value).ToDictionary(k => k.Id.Value);
+
+                if (!meetingsOnDateMap.TryGetValue(id, out meeting))
+                    throw new Exception($"Данная встреча отсутствует на дату {onDate:dd.MM/yyyy}.");
+            }
+            else
+            {
+                if (!_context.Meetings.TryGetValue(id, out var entity))
+                    throw new Exception($"Данная встреча отсутствует.");
+
+                meeting = new MeetingDTO
                 {
-                    MeetingId = val.MeetingId,
-                    NotificationTime = val.NotificationTime
-                } : null
-            };
+                    Id = entity.Id,
+                    Description = entity.Description,
+                    Subject = entity.Subject,
+                    MeetingStart = entity.MeetingStart,
+                    MeetingEnd = entity.MeetingEnd,
+                    MeetingNotification = _context.MeetingNotifications.TryGetValue(id, out var val) ? new MeetingNotificationDTO
+                    {
+                        MeetingId = val.MeetingId,
+                        NotificationTime = val.NotificationTime
+                    } : null
+                };
+            }
+
+            return meeting;
         }
 
         public async Task SaveMeetingsOnDateFileAsync(DateTime onDate, string folderPath)

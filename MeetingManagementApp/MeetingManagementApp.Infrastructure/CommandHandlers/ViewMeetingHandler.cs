@@ -44,21 +44,21 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 var idInput = Console.ReadLine();
 
                 id = int.TryParse(idInput, out var val) ? val : throw new BusinessException("Введен некорректный номер встречи.");
-
-                var meetingDTO = _meetingController.GetMeetingById(id.Value);
-
-                meeting.Id = id;
-                meeting.Subject = meetingDTO.Subject;
-                meeting.Description = meetingDTO.Description;
-                meeting.OnDate = meetingDTO.MeetingStart.Date;
-                meeting.MeetingStart = meetingDTO.MeetingStart;
-                meeting.MeetingEnd = meetingDTO.MeetingEnd;
-                meeting.MeetingNotification = meetingDTO.MeetingNotification != null ? new MeetingNotificationInput
-                {
-                    MeetingId = meetingDTO.MeetingNotification.MeetingId,
-                    NotificationTime = meetingDTO.MeetingNotification.NotificationTime
-                } : null;
             }
+
+            var meetingDTO = _meetingController.GetMeetingById(id.Value, meeting.OnDate.Value);
+
+            meeting.Id = id;
+            meeting.Subject = meetingDTO.Subject;
+            meeting.Description = meetingDTO.Description;
+            meeting.OnDate = meetingDTO.MeetingStart.Date;
+            meeting.MeetingStart = meetingDTO.MeetingStart;
+            meeting.MeetingEnd = meetingDTO.MeetingEnd;
+            meeting.MeetingNotification = meetingDTO.MeetingNotification != null ? new MeetingNotificationInput
+            {
+                MeetingId = meetingDTO.MeetingNotification.MeetingId,
+                NotificationTime = meetingDTO.MeetingNotification.NotificationTime
+            } : null;
 
             Console.WriteLine();
             Console.WriteLine(new string('-', 20));
