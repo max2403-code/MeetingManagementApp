@@ -10,22 +10,21 @@ namespace MeetingManagementApp.Infrastructure.Services
         public CommandResult PrinterExecute(string? value,
             Func<string?, CommandResult> func,
             IReadOnlyCollection<(string command, string? description)>? commands = null,
-            Func<string?, ISet<string>?>? notAllowCommandFunc = null)
+            Func<string?, ISet<string>>? allowCommandFunc = null)
         {
             lock (_locker)
             {
                 var funcValue = func(value);
 
-                if (commands != null && commands.Count > 0 && notAllowCommandFunc != null) 
+                if (commands != null && commands.Count > 0 && allowCommandFunc != null) 
                 {
-                    var notAllowCommandsSet = notAllowCommandFunc(funcValue.ResultValue);
+                    var allowCommandsSet = allowCommandFunc(funcValue.ResultValue);
 
-                    if (notAllowCommandsSet != null && notAllowCommandsSet.Count > 0)
-                        commands = commands.Where(x => !notAllowCommandsSet.Contains(x.command)).Select(x => (x.command, x.description)).ToArray();
-                }
-                
-                if (commands != null && commands.Count > 0)
+                    if (allowCommandsSet.Count > 0)
+                        commands = commands.Where(x => allowCommandsSet.Contains(x.command)).Select(x => (x.command, x.description)).ToArray();
+
                     funcValue.Command = GetUserCommand(commands);
+                }
                 
                 return funcValue;
             }

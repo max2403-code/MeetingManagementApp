@@ -46,40 +46,30 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 id = int.TryParse(idInput, out var val) ? val : throw new BusinessException("Введен некорректный номер встречи.");
             }
 
-            var meetingDTO = _meetingController.GetMeetingById(id.Value, meeting.OnDate.Value);
+            var meetingDTO = _meetingController.GetMeetingById(id.Value, meeting.OnDate ?? null);
 
             meeting.Id = id;
-            meeting.Subject = meetingDTO.Subject;
-            meeting.Description = meetingDTO.Description;
-            meeting.OnDate = meetingDTO.MeetingStart.Date;
-            meeting.MeetingStart = meetingDTO.MeetingStart;
-            meeting.MeetingEnd = meetingDTO.MeetingEnd;
-            meeting.MeetingNotification = meetingDTO.MeetingNotification != null ? new MeetingNotificationInput
-            {
-                MeetingId = meetingDTO.MeetingNotification.MeetingId,
-                NotificationTime = meetingDTO.MeetingNotification.NotificationTime
-            } : null;
 
             Console.WriteLine();
             Console.WriteLine(new string('-', 20));
 
             Console.WriteLine();
-            Console.WriteLine($"Номер встречи: {meeting.Id}");
+            Console.WriteLine($"Номер встречи: {meetingDTO.Id}");
 
             Console.WriteLine();
-            Console.WriteLine($"Заголовок: {meeting.Subject}");
+            Console.WriteLine($"Заголовок: {meetingDTO.Subject}");
 
             Console.WriteLine();
-            Console.WriteLine($"Начало: {meeting.MeetingStart:HH:mm}");
+            Console.WriteLine($"Начало: {meetingDTO.MeetingStart:HH:mm}");
 
             Console.WriteLine();
-            Console.WriteLine($"Примерное окончание: {meeting.MeetingEnd:HH:mm}");
+            Console.WriteLine($"Примерное окончание: {meetingDTO.MeetingEnd:HH:mm}");
 
             Console.WriteLine();
-            Console.WriteLine($"Описание: {meeting.Description}");
+            Console.WriteLine($"Описание: {meetingDTO.Description}");
 
             Console.WriteLine();
-            Console.WriteLine($"Уведомление: {(meeting.MeetingNotification != null ? meeting.MeetingNotification.NotificationTime.Value.ToString("dd.MM.yyyy HH:mm") : "Отсутствует")}");
+            Console.WriteLine($"Уведомление: {(meetingDTO.MeetingNotification != null ? meetingDTO.MeetingNotification.NotificationTime.ToString("dd.MM.yyyy HH:mm") : "Отсутствует")}");
 
             return new CommandResult
             {
@@ -87,7 +77,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             };
         }
 
-        protected override ISet<string>? GetNotAllowedCommands(string? requestValue)
+        protected override ISet<string> GetAllowedCommands(string? requestValue)
         {
             var rval = new List<string>();
 
@@ -97,14 +87,18 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 throw new Exception("Ошибка при просмотре встречи.");
 
             if (meeting.MeetingStart.Value < DateTime.Now)
-                rval.AddRange(["um", "an", "vn"]);
+                rval.Add("dm");
             else
             {
+                rval.AddRange(["um", "dm"]);
+
                 if (meeting.MeetingNotification != null)
                     rval.Add("an");
                 else
                     rval.Add("vn");
             }
+
+            rval.AddRange(["m", "q"]);
 
             return rval.ToHashSet();
         }

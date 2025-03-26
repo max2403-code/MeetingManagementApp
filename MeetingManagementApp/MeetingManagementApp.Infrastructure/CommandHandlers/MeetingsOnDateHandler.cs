@@ -84,9 +84,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             };
         }
 
-        protected override ISet<string>? GetNotAllowedCommands(string? requestValue)
+        protected override ISet<string> GetAllowedCommands(string? requestValue)
         {
-            return null;
+            return new HashSet<string>(["am", "vm", "d", "m", "q"]);
         }
     }
 }

@@ -27,9 +27,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             return new CommandResult();
         }
 
-        protected override ISet<string>? GetNotAllowedCommands(string? requestValue)
+        protected override ISet<string> GetAllowedCommands(string? requestValue)
         {
-            return null;
+            return new HashSet<string>(["v", "am", "q"]);
         }
     }
 }

@@ -4,22 +4,28 @@ using MeetingManagementApp.Domain.Models.Common;
 using MeetingManagementApp.Domain.Models.DTO;
 using MeetingManagementApp.Domain.Models.Input;
 using MeetingManagementApp.Infrastructure.AbstractHandlers;
+using MeetingManagementApp.Infrastructure.Controllers;
 using System.Text.Json;
 
 namespace MeetingManagementApp.Infrastructure.CommandHandlers
 {
-    internal class AddNewMeetingHandler : AbstractCommandHandler
+    internal class UpdateMeetingHandler : AbstractCommandHandler
     {
         private readonly IMeetingController _meetingController;
 
-        public AddNewMeetingHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
+        public UpdateMeetingHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
         {
             _meetingController = meetingController;
         }
 
         public override string? GetCommandDescription()
         {
-            return "Добавить встречу";
+            return "Редактировать встречу.";
+        }
+
+        protected override ISet<string> GetAllowedCommands(string? requestValue)
+        {
+            return new HashSet<string>(["vm", "m", "q"]);
         }
 
         protected override CommandResult GetConsoleCommandResult(string? value)
@@ -50,7 +56,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             var subject = meeting.Subject;
 
-            if (subject != null) 
+            if (subject != null)
             {
                 Console.Write("Заголовок: ");
 
@@ -152,12 +158,6 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             {
                 ResultValue = meeting != null ? JsonSerializer.Serialize(meeting) : null,
             };
-
-        }
-
-        protected override ISet<string> GetAllowedCommands(string? requestValue)
-        {
-            return new HashSet<string>(["vm", "m", "q"]);
         }
     }
 }

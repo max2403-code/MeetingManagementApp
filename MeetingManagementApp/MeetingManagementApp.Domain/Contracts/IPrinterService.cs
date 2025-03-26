@@ -8,6 +8,6 @@ namespace MeetingManagementApp.Domain.Contracts
             string? value, 
             Func<string?, CommandResult> func,
             IReadOnlyCollection<(string command, string? description)>? commands = null,
-            Func<string?, ISet<string>?>? notAllowCommandFunc = null);
+            Func<string?, ISet<string>>? allowCommandFunc = null);
     }
 }

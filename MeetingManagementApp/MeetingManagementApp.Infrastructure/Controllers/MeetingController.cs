@@ -28,19 +28,24 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             return _meetingService.GetMeetingsOnDate(date);
         }
 
+        public Task SaveMeetingsOnDateFileAsync(DateTime onDate, string folderPath)
+        {
+            return _meetingService.SaveMeetingsOnDateFileAsync(onDate, folderPath);
+        }
+
         public string? ValidateMeetingDescription(string? description)
         {
             return _meetingService.ValidateMeetingDescription(description);
         }
 
-        public string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd)
+        public string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd, int? meetingId = null)
         {
-            return _meetingService.ValidateMeetingMeetingEnd(meetingStart, meetingEnd);
+            return _meetingService.ValidateMeetingMeetingEnd(meetingStart, meetingEnd, meetingId);
         }
 
-        public string? ValidateMeetingMeetingStart(DateTime meetingStart)
+        public string? ValidateMeetingMeetingStart(DateTime meetingStart, int? meetingId = null)
         {
-            return _meetingService.ValidateMeetingMeetingStart(meetingStart);
+            return _meetingService.ValidateMeetingMeetingStart(meetingStart, meetingId);
         }
 
         public string? ValidateMeetingSubject(string? subject)

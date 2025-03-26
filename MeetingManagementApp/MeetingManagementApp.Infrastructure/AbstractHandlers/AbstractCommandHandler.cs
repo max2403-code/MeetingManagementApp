@@ -20,13 +20,13 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
 
         public CommandHandlerResult Execute(string? requestValue)
         {
-            var consoleCommandResult = _printerService.PrinterExecute(requestValue, GetConsoleCommandResult, _nextCommands, GetNotAllowedCommands);
+            var consoleCommandResult = _printerService.PrinterExecute(requestValue, GetConsoleCommandResult, _nextCommands, GetAllowedCommands);
 
-            var notAllowedCommands = GetNotAllowedCommands(consoleCommandResult.ResultValue);
+            var allowedCommands = GetAllowedCommands(consoleCommandResult.ResultValue);
 
-            if ((string.IsNullOrEmpty(consoleCommandResult.Command) || // Если нет команды
-                !_nextHandlers.ContainsKey(consoleCommandResult.Command) || // или есть незнакомая команда
-                notAllowedCommands != null && notAllowedCommands.Contains(consoleCommandResult.Command))) // или команда знакомая, но недоступная в данном контексте
+            if (string.IsNullOrEmpty(consoleCommandResult.Command) || // Если нет команды
+                !_nextHandlers.ContainsKey(consoleCommandResult.Command) || 
+                !allowedCommands.Contains(consoleCommandResult.Command)) // или команда незнакомая
                 throw new Exception("Неверная команда.");
 
             return new CommandHandlerResult
@@ -38,7 +38,7 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
 
         protected abstract CommandResult GetConsoleCommandResult(string? value);
 
-        protected abstract ISet<string>? GetNotAllowedCommands(string? requestValue);
+        protected abstract ISet<string> GetAllowedCommands(string? requestValue);
 
         public abstract string? GetCommandDescription();
     }

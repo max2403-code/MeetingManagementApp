@@ -97,12 +97,14 @@ namespace MeetingManagementApp.Infrastructure.Services
             return null;
         }
 
-        public string? ValidateMeetingMeetingStart(DateTime meetingStart)
+        public string? ValidateMeetingMeetingStart(DateTime meetingStart, int? meetingId = null)
         {
             if (meetingStart < DateTime.Now)
                 return "Встречу можно планировать только в будущем.";
 
-            var isMeetingExist = _context.Meetings.Values.Any(x => x.MeetingStart <= meetingStart && x.MeetingEnd >= meetingStart);
+            var isMeetingExist = meetingId.HasValue 
+                ? _context.Meetings.Values.Where(x => x.Id != meetingId.Value).Any(x => x.MeetingStart <= meetingStart && x.MeetingEnd >= meetingStart) 
+                : _context.Meetings.Values.Any(x => x.MeetingStart <= meetingStart && x.MeetingEnd >= meetingStart);
 
             if (isMeetingExist)
                 return "На данный промежуток времени уже запланирована другая встреча.";
@@ -110,12 +112,16 @@ namespace MeetingManagementApp.Infrastructure.Services
             return null;
         }
 
-        public string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd)
+        public string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd, int? meetingId = null)
         {
             if (meetingEnd <= meetingStart)
                 return "Окончание встречи не может быть равно или раньше ее начала.";
 
-            var isMeetingExist = _context.Meetings.Values.Any(x => 
+            var isMeetingExist = meetingId.HasValue 
+                ? _context.Meetings.Values.Where(x => x.Id != meetingId.Value).Any(x =>
+                x.MeetingStart <= meetingEnd && x.MeetingEnd >= meetingEnd ||
+                x.MeetingStart >= meetingStart && x.MeetingEnd <= meetingEnd)
+                : _context.Meetings.Values.Any(x => 
                 x.MeetingStart <= meetingEnd && x.MeetingEnd >= meetingEnd || 
                 x.MeetingStart >= meetingStart && x.MeetingEnd <= meetingEnd);
 
@@ -155,13 +161,13 @@ namespace MeetingManagementApp.Infrastructure.Services
 
         public MeetingDTO GetMeetingById(int id, DateTime? onDate = null)
         {
-             MeetingDTO meeting;
+             MeetingDTO? meeting;
 
             if (onDate.HasValue)
             {
-                var meetingsOnDateMap = GetMeetingsOnDate(onDate.Value).ToDictionary(k => k.Id.Value);
+                meeting = GetMeetingsOnDate(onDate.Value).FirstOrDefault(x => x.Id == id);
 
-                if (!meetingsOnDateMap.TryGetValue(id, out meeting))
+                if (meeting == null)
                     throw new Exception($"Данная встреча отсутствует на дату {onDate:dd.MM/yyyy}.");
             }
             else
