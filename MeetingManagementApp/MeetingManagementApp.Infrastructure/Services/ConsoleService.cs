@@ -32,11 +32,13 @@ namespace MeetingManagementApp.Infrastructure.Services
 
         private string? GetUserCommand(IReadOnlyCollection<(string command, string? description)> commands) 
         {
-            Console.WriteLine(new string('-', 20));
+            Console.WriteLine(new string('-', 40));
             Console.WriteLine("Выберите команду:");
 
             foreach (var command in commands)
                 Console.WriteLine($"{command.command} - {command.description}");
+
+            Console.WriteLine("");
 
             Console.WriteLine("Команда:");
 

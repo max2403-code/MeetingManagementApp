@@ -4,8 +4,6 @@ using MeetingManagementApp.Infrastructure.Controllers;
 using MeetingManagementApp.Infrastructure.NotificationsSenders;
 using MeetingManagementApp.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.Metrics;
-using System.Reflection.Metadata.Ecma335;
 
 namespace MeetingManagementApp.Infrastructure.Extensions
 {

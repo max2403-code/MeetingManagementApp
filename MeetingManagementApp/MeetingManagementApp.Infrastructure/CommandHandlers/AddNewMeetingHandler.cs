@@ -4,6 +4,7 @@ using MeetingManagementApp.Domain.Models.Common;
 using MeetingManagementApp.Domain.Models.DTO;
 using MeetingManagementApp.Domain.Models.Input;
 using MeetingManagementApp.Infrastructure.AbstractHandlers;
+using System.Globalization;
 using System.Text.Json;
 
 namespace MeetingManagementApp.Infrastructure.CommandHandlers
@@ -12,14 +13,14 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
     {
         private readonly IMeetingController _meetingController;
 
-        public AddNewMeetingHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
+        public AddNewMeetingHandler(IPrinterService consoleService, IMeetingController meetingController) : base(consoleService)
         {
             _meetingController = meetingController;
         }
 
         public override string? GetCommandDescription()
         {
-            return "Добавить встречу";
+            return "Добавить встречу.";
         }
 
         protected override CommandResult GetConsoleCommandResult(string? value)
@@ -44,7 +45,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 var onDateInput = Console.ReadLine()?.Split(".");
 
-                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("/", onDateInput[1], onDateInput[0], onDateInput[2]), out var val) ? val.Date : throw new BusinessException("Введена неверная дата.");
+                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("/", onDateInput[1], onDateInput[0], onDateInput[2]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new BusinessException("Введена неверная дата.");
                 meeting.OnDate = onDate;
             }
 
@@ -103,7 +104,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 Console.Write("Введите время начала встречи: ");
 
                 var meetingStartInput = Console.ReadLine();
-                meetingStart = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("MM/dd/yyyy"), meetingStartInput), out var val) ? val.Date : throw new BusinessException("Введено неверное время начала встречи.");
+                meetingStart = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("MM/dd/yyyy"), meetingStartInput), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new BusinessException("Введено неверное время начала встречи.");
 
                 var error = _meetingController.ValidateMeetingMeetingStart(meetingStart.Value);
 
@@ -126,7 +127,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 Console.Write("Введите примерное время окончания встречи: ");
 
                 var meetingEndInput = Console.ReadLine();
-                meetingEnd = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("MM/dd/yyyy"), meetingEndInput), out var val) ? val.Date : throw new BusinessException("Введено неверное время начала встречи.");
+                meetingEnd = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("MM/dd/yyyy"), CultureInfo.InvariantCulture, meetingEndInput), out var val) ? val.Date : throw new BusinessException("Введено неверное время окончания встречи.");
 
                 var error = _meetingController.ValidateMeetingMeetingEnd(meetingStart.Value, meetingEnd.Value);
 

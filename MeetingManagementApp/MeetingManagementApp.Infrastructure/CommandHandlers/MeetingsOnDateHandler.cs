@@ -3,6 +3,7 @@ using MeetingManagementApp.Domain.Exceptions;
 using MeetingManagementApp.Domain.Models.Common;
 using MeetingManagementApp.Domain.Models.Input;
 using MeetingManagementApp.Infrastructure.AbstractHandlers;
+using System.Globalization;
 using System.Text.Json;
 
 namespace MeetingManagementApp.Infrastructure.CommandHandlers
@@ -11,14 +12,14 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
     {
         private readonly IMeetingController _meetingController;
 
-        public MeetingsOnDateHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
+        public MeetingsOnDateHandler(IPrinterService consoleService, IMeetingController meetingController) : base(consoleService)
         {
             _meetingController = meetingController;
         }
 
         public override string? GetCommandDescription()
         {
-            return "Показать встречи на конкретную дату";
+            return "Показать встречи на конкретную дату.";
         }
 
         protected override CommandResult GetConsoleCommandResult(string? value)
@@ -43,7 +44,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 var onDateInput = Console.ReadLine()?.Split(".");
 
-                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("/", onDateInput[1], onDateInput[0], onDateInput[2]), out var val) ? val.Date : throw new BusinessException("Введена неверная дата.");
+                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("/", onDateInput[1], onDateInput[0], onDateInput[2]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new BusinessException("Введена неверная дата.");
                 meeting.OnDate = onDate;
             }
 

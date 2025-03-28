@@ -11,7 +11,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
     {
         private readonly IMeetingController _meetingController;
 
-        public DownloadMeetingsHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
+        public DownloadMeetingsHandler(IPrinterService consoleService, IMeetingController meetingController) : base(consoleService)
         {
             _meetingController = meetingController;
         }
@@ -48,8 +48,6 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 throw new BusinessException("Указан неверный путь.");
 
             var t = _meetingController.SaveMeetingsOnDateFileAsync(meeting.OnDate.Value, path);
-
-            t.Start();
 
             t.Wait();
 

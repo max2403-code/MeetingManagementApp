@@ -5,20 +5,24 @@ namespace MeetingManagementApp.Api.MeetingApp
 {
     public class MeetingApp
     {
-        private readonly ICommandRequestHandler _startHandler;
-        private readonly ICommandRequestHandler _exceptionHandler;
         private readonly IBackgroundService _notificationSender;
+        private readonly IReadOnlyDictionary<string, ICommandRequestHandler> _handlers;
+        private readonly IReadOnlyCollection<(string command, string? description)> _commands;
 
-        public MeetingApp( IEnumerable<ICommandRequestHandler> handlers, IBackgroundService notificationSender)
+        public MeetingApp(IEnumerable<ICommandRequestHandler> handlers, IBackgroundService notificationSender)
         {
-            _startHandler = handlers.FirstOrDefault(x => x.GetCommand().Equals("m"));
-            _exceptionHandler = handlers.FirstOrDefault(x => x.GetCommand().Equals("ex"));
             _notificationSender = notificationSender;
+            _handlers = handlers.ToDictionary(k => k.GetCommand());
+            _commands = handlers.Select(x => (x.GetCommand(), x.GetCommandDescription())).ToArray();
         }
 
         public void Run()
         {
-            var handler = _startHandler;
+            var startHandler = _handlers["m"];
+            var exceptionHandler = _handlers["ex"];
+
+            var handler = startHandler;
+            
             string? commandResultValue = null;
 
             Task.Run(_notificationSender.Run);
@@ -27,7 +31,7 @@ namespace MeetingManagementApp.Api.MeetingApp
             {
                 try
                 {
-                    var commandResult = handler.Execute(commandResultValue);
+                    var commandResult = handler.Execute(commandResultValue, _handlers, _commands);
 
                     handler = commandResult.NextCommandRequestHandler;
                     commandResultValue = commandResult.Result;
@@ -35,12 +39,12 @@ namespace MeetingManagementApp.Api.MeetingApp
                 catch(BusinessException ex)
                 {
                     commandResultValue = ex.Value;
-                    _exceptionHandler.Execute(ex.Message);
+                    exceptionHandler.Execute(ex.Message, _handlers, _commands);
                 }
                 catch(Exception ex) 
                 {
-                    var exCommandResult = _exceptionHandler.Execute(ex.Message);
-                    handler = _startHandler; //exCommandResult.NextCommandRequestHandler;
+                    var exCommandResult = exceptionHandler.Execute(ex.Message, _handlers, _commands);
+                    handler = startHandler; //exCommandResult.NextCommandRequestHandler;
                     commandResultValue = null;
                 }
             }

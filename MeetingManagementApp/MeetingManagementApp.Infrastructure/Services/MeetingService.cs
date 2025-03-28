@@ -85,14 +85,14 @@ namespace MeetingManagementApp.Infrastructure.Services
 
         public string? ValidateMeetingSubject(string? subject)
         {
-            if (!string.IsNullOrEmpty(subject))
+            if (string.IsNullOrEmpty(subject))
                 return "Заголовок встречи должен быть заполнен.";
             return null;
         }
 
         public string? ValidateMeetingDescription(string? description)
         {
-            if (!string.IsNullOrEmpty(description))
+            if (string.IsNullOrEmpty(description))
                 return "Заголовок встречи должен быть заполнен.";
             return null;
         }
@@ -198,12 +198,13 @@ namespace MeetingManagementApp.Infrastructure.Services
 
             var fullPath = Path.Combine(folderPath, $"Встречи за {onDate:dd.MM.yyyy}.txt");
 
-            using var streamWriter = new StreamWriter(folderPath, false);
+            using var streamWriter = new StreamWriter(fullPath, false);
 
             await streamWriter.WriteLineAsync($"Список встреч за {onDate:dd.MM.yyyy}:");
 
-            if (items.Count > 0)
+            if (items.Count == 0)
             {
+                await Task.Delay(5000);
                 await streamWriter.WriteLineAsync();
                 await streamWriter.WriteAsync("Встречи на данную дату отсутствуют.");
                 return;

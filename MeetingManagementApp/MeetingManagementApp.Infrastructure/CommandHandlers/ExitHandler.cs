@@ -12,7 +12,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             _consoleService = consoleService;
         }
 
-        public CommandHandlerResult Execute(string? requestValue)
+        public CommandHandlerResult Execute(string? requestValue, IReadOnlyDictionary<string, ICommandRequestHandler> handlers, IReadOnlyCollection<(string command, string? description)> commands)
         {
             var rval = _consoleService.PrinterExecute(requestValue, GetConsoleCommandResult);
 
@@ -24,6 +24,11 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             return "q";
         }
 
+        public string? GetCommandDescription()
+        {
+            return "Выйти из приложения.";
+        }
+
         private CommandResult GetConsoleCommandResult(string? value)
         {
             Console.WriteLine($"Для выхода нажмите на любую клавишу...");
@@ -32,5 +37,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             return new CommandResult();
         }
+
+
     }
 }

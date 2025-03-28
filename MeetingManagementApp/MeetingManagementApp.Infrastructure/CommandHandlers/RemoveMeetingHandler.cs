@@ -10,7 +10,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
     {
         private readonly IMeetingController _meetingController;
 
-        public RemoveMeetingHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
+        public RemoveMeetingHandler(IPrinterService consoleService, IMeetingController meetingController) : base(consoleService)
         {
             _meetingController = meetingController;
         }

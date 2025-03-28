@@ -6,7 +6,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 {
     internal class MainMenuHandler : AbstractCommandHandler
     {
-        public MainMenuHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService) : base(nextHandlers, consoleService)
+        public MainMenuHandler(IPrinterService consoleService) : base(consoleService)
         {
         }
 
@@ -29,7 +29,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
         public override string GetCommand()
         {
-            return "q";
+            return "m";
         }
     }
 }
