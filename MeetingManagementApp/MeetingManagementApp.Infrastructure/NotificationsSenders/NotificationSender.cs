@@ -25,7 +25,7 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
                 foreach (var notification in _notificationService.GetMeetingNotifications())
                 {
                     var notificationJson = JsonSerializer.Serialize(notification);
-
+                    _notificationService.RemoveMeetingNotification(notification.MeetingId);
                     Task.Run(() => _printerService.PrinterExecute(notificationJson, PrinterHandler));
                 }
             }

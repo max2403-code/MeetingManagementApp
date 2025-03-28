@@ -11,7 +11,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
     {
         private readonly IMeetingController _meetingController;
 
-        public MeetingsOnDateHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
+        public MeetingsOnDateHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
         {
             _meetingController = meetingController;
         }
@@ -51,7 +51,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             Console.WriteLine();
 
-            if (meetings.Count > 0)
+            if (meetings.Count == 0)
                 Console.WriteLine("Встречи отсутствуют.");
             else
                 foreach (var item in meetings)
@@ -86,7 +86,22 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
         protected override ISet<string> GetAllowedCommands(string? requestValue)
         {
-            return new HashSet<string>(["am", "vm", "d", "m", "q"]);
+            var meeting = string.IsNullOrEmpty(requestValue) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(requestValue) ?? new MeetingInput();
+
+            if (!meeting.OnDate.HasValue)
+                throw new Exception("Ошибка при просмотре встреч.");
+
+            var meetings = _meetingController.GetMeetingsOnDate(meeting.OnDate.Value);
+
+            if (meetings.Count == 0)
+                return new HashSet<string>(["am", "d", "m", "q"]);
+            else
+                return new HashSet<string>(["am", "vm", "d", "m", "q"]);
+        }
+
+        public override string GetCommand()
+        {
+            return "v";
         }
     }
 }

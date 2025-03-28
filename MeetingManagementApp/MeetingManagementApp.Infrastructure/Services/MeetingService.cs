@@ -131,14 +131,13 @@ namespace MeetingManagementApp.Infrastructure.Services
             return null;
         }
 
-        public int RemoveMeeting(int id) 
+        public bool RemoveMeeting(int id) 
         {
-            if (!_context.Meetings.Remove(id))
-                throw new Exception("Данная встреча отсутствует в списке либо уже удалена.");
+            var result = _context.Meetings.Remove(id);
 
             _notificationService.RemoveMeetingNotification(id);
 
-            return 1;
+            return result;
         }
 
         public int UpdateMeeting(MeetingDTO meeting)

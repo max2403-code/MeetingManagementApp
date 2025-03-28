@@ -19,6 +19,11 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             return new CommandHandlerResult();
         }
 
+        public string GetCommand()
+        {
+            return "q";
+        }
+
         private CommandResult GetConsoleCommandResult(string? value)
         {
             Console.WriteLine($"Для выхода нажмите на любую клавишу...");

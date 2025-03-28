@@ -12,7 +12,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
     {
         private readonly IMeetingController _meetingController;
 
-        public AddNewMeetingHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
+        public AddNewMeetingHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
         {
             _meetingController = meetingController;
         }
@@ -138,10 +138,10 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             meeting.Id = _meetingController.AddNewMeeting(new MeetingDTO
             {
-                Subject = meeting.Subject,
-                Description = meeting.Description,
-                MeetingStart = meeting.MeetingStart.Value,
-                MeetingEnd = meeting.MeetingEnd.Value
+                Subject = subject,
+                Description = description,
+                MeetingStart = meetingStart.Value,
+                MeetingEnd = meetingEnd.Value
             });
 
             Console.WriteLine();
@@ -150,14 +150,22 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             return new CommandResult
             {
-                ResultValue = meeting != null ? JsonSerializer.Serialize(meeting) : null,
+                ResultValue = meeting != null ? JsonSerializer.Serialize(new MeetingInput
+                {
+                    Id = meeting.Id,
+                    //OnDate = meeting.OnDate,
+                }) : null,
             };
-
         }
 
         protected override ISet<string> GetAllowedCommands(string? requestValue)
         {
             return new HashSet<string>(["vm", "m", "q"]);
+        }
+
+        public override string GetCommand()
+        {
+            return "am";
         }
     }
 }

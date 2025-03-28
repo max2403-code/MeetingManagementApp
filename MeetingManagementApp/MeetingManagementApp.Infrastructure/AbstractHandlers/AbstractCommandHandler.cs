@@ -11,9 +11,9 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
         private readonly IReadOnlyCollection<(string command, string? description)> _nextCommands;
 
 
-        public AbstractCommandHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService) 
+        public AbstractCommandHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService) 
         {
-            _nextHandlers = nextHandlers;
+            _nextHandlers = nextHandlers.ToDictionary(k => k.GetCommand());
             _printerService = consoleService;
             _nextCommands = _nextHandlers.Select(x => (x.Key, x.Value.GetCommandDescription())).ToArray();
         }
@@ -41,5 +41,7 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
         protected abstract ISet<string> GetAllowedCommands(string? requestValue);
 
         public abstract string? GetCommandDescription();
+
+        public abstract string GetCommand();
     }
 }

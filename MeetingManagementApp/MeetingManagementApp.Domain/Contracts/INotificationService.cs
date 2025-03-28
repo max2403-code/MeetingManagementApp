@@ -13,5 +13,7 @@ namespace MeetingManagementApp.Domain.Contracts
         bool RemoveMeetingNotification(int meetingId);
 
         IReadOnlyCollection<MeetingNotificationDTO> GetMeetingNotifications();
+
+        MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId);
     }
 }

@@ -6,22 +6,22 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
     internal class ExceptionHandler : ICommandRequestHandler
     {
         private readonly IPrinterService _consoleService;
-        private readonly ICommandRequestHandler _mainMenuHandler;
 
-        public ExceptionHandler(ICommandRequestHandler mainMenuHandler, IPrinterService consoleService) 
+        public ExceptionHandler(IPrinterService consoleService) 
         {
             _consoleService = consoleService;
-            _mainMenuHandler = mainMenuHandler;
         }
 
         public CommandHandlerResult Execute(string? requestValue)
         {
             var rval = _consoleService.PrinterExecute(requestValue, GetConsoleCommandResult);
 
-            return new CommandHandlerResult
-            {
-                NextCommandRequestHandler = _mainMenuHandler,
-            };
+            return new CommandHandlerResult();
+        }
+
+        public string GetCommand()
+        {
+            return "ex";
         }
 
         private CommandResult GetConsoleCommandResult(string? value)
@@ -29,6 +29,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             Console.WriteLine(new string('-', 20));
 
             Console.WriteLine($"Ошибка: {value}");
+
+            Console.WriteLine($"Нажмите на любую клавишу...");
 
             Console.ReadKey();
 

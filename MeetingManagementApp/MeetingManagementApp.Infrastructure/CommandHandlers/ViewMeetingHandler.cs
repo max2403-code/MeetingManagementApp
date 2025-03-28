@@ -11,7 +11,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
     {
         private readonly IMeetingController _meetingController;
 
-        public ViewMeetingHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
+        public ViewMeetingHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
         {
             _meetingController = meetingController;
         }
@@ -46,7 +46,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 id = int.TryParse(idInput, out var val) ? val : throw new BusinessException("Введен некорректный номер встречи.");
             }
 
-            var meetingDTO = _meetingController.GetMeetingById(id.Value, meeting.OnDate ?? null);
+            var meetingDTO = _meetingController.GetMeetingById(id.Value, meeting.OnDate);
 
             meeting.Id = id;
 
@@ -79,7 +79,10 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
         protected override ISet<string> GetAllowedCommands(string? requestValue)
         {
-            var rval = new List<string>();
+            var rval = new List<string>
+            {
+                "v"
+            };
 
             var meeting = string.IsNullOrEmpty(requestValue) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(requestValue) ?? new MeetingInput();
 
@@ -101,6 +104,11 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             rval.AddRange(["m", "q"]);
 
             return rval.ToHashSet();
+        }
+
+        public override string GetCommand()
+        {
+            return "vm";
         }
     }
 }

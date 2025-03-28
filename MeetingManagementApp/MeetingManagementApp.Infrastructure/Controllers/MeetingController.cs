@@ -28,9 +28,21 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             return _meetingService.GetMeetingsOnDate(date);
         }
 
-        public Task SaveMeetingsOnDateFileAsync(DateTime onDate, string folderPath)
+        public bool RemoveMeeting(int id)
         {
-            return _meetingService.SaveMeetingsOnDateFileAsync(onDate, folderPath);
+            return _meetingService.RemoveMeeting(id);
+        }
+
+        public async Task<int> SaveMeetingsOnDateFileAsync(DateTime onDate, string folderPath)
+        {
+            await _meetingService.SaveMeetingsOnDateFileAsync(onDate, folderPath);
+
+            return 1;
+        }
+
+        public int UpdateMeeting(MeetingDTO meeting)
+        {
+            return _meetingService.UpdateMeeting(meeting);
         }
 
         public string? ValidateMeetingDescription(string? description)

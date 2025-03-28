@@ -8,5 +8,7 @@ namespace MeetingManagementApp.Domain.Contracts
 
         string? GetCommandDescription() => null;
 
+        string GetCommand();
+
     }
 }

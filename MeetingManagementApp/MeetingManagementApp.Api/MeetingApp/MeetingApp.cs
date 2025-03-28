@@ -3,21 +3,25 @@ using MeetingManagementApp.Domain.Exceptions;
 
 namespace MeetingManagementApp.Api.MeetingApp
 {
-    internal class MeetingApp
+    public class MeetingApp
     {
         private readonly ICommandRequestHandler _startHandler;
         private readonly ICommandRequestHandler _exceptionHandler;
+        private readonly IBackgroundService _notificationSender;
 
-        public MeetingApp(ICommandRequestHandler startHandler, ICommandRequestHandler exceptionHandler)
+        public MeetingApp( IEnumerable<ICommandRequestHandler> handlers, IBackgroundService notificationSender)
         {
-            _startHandler = startHandler;
-            _exceptionHandler = exceptionHandler;
+            _startHandler = handlers.FirstOrDefault(x => x.GetCommand().Equals("m"));
+            _exceptionHandler = handlers.FirstOrDefault(x => x.GetCommand().Equals("ex"));
+            _notificationSender = notificationSender;
         }
 
         public void Run()
         {
             var handler = _startHandler;
             string? commandResultValue = null;
+
+            Task.Run(_notificationSender.Run);
 
             while (handler != null) 
             {
@@ -36,8 +40,8 @@ namespace MeetingManagementApp.Api.MeetingApp
                 catch(Exception ex) 
                 {
                     var exCommandResult = _exceptionHandler.Execute(ex.Message);
-                    handler = exCommandResult.NextCommandRequestHandler;
-                    commandResultValue = exCommandResult.Result;
+                    handler = _startHandler; //exCommandResult.NextCommandRequestHandler;
+                    commandResultValue = null;
                 }
             }
 

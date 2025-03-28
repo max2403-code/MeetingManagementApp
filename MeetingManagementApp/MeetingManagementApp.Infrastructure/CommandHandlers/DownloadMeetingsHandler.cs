@@ -11,9 +11,14 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
     {
         private readonly IMeetingController _meetingController;
 
-        public DownloadMeetingsHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
+        public DownloadMeetingsHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService, IMeetingController meetingController) : base(nextHandlers, consoleService)
         {
             _meetingController = meetingController;
+        }
+
+        public override string GetCommand()
+        {
+            return "d";
         }
 
         public override string? GetCommandDescription()
@@ -23,7 +28,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
         protected override ISet<string> GetAllowedCommands(string? requestValue)
         {
-            return new HashSet<string>(["m", "q"]);
+            return new HashSet<string>(["v", "m", "q"]);
         }
 
         protected override CommandResult GetConsoleCommandResult(string? value)
@@ -39,10 +44,14 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             var path = Console.ReadLine();
 
-            if (string.IsNullOrEmpty(path) || Path.IsPathRooted(path) || Directory.Exists(path))
+            if (string.IsNullOrEmpty(path) || !Path.IsPathRooted(path) || !Directory.Exists(path))
                 throw new BusinessException("Указан неверный путь.");
 
-            _meetingController.SaveMeetingsOnDateFileAsync(meeting.OnDate.Value, path);
+            var t = _meetingController.SaveMeetingsOnDateFileAsync(meeting.OnDate.Value, path);
+
+            t.Start();
+
+            t.Wait();
 
             Console.WriteLine("Файл успешно сохранен.");
 

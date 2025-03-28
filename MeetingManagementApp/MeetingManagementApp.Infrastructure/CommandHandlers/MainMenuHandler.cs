@@ -1,17 +1,12 @@
 ﻿using MeetingManagementApp.Domain.Contracts;
 using MeetingManagementApp.Domain.Models.Common;
 using MeetingManagementApp.Infrastructure.AbstractHandlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MeetingManagementApp.Infrastructure.CommandHandlers
 {
     internal class MainMenuHandler : AbstractCommandHandler
     {
-        public MainMenuHandler(IReadOnlyDictionary<string, ICommandRequestHandler> nextHandlers, IPrinterService consoleService) : base(nextHandlers, consoleService)
+        public MainMenuHandler(IEnumerable<ICommandRequestHandler> nextHandlers, IPrinterService consoleService) : base(nextHandlers, consoleService)
         {
         }
 
@@ -30,6 +25,11 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
         protected override ISet<string> GetAllowedCommands(string? requestValue)
         {
             return new HashSet<string>(["v", "am", "q"]);
+        }
+
+        public override string GetCommand()
+        {
+            return "q";
         }
     }
 }

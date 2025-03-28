@@ -59,12 +59,11 @@ namespace MeetingManagementApp.Infrastructure.Services
 
         public bool RemoveMeetingNotification(int meetingId)
         {
-            if (!_context.MeetingNotifications.Remove(meetingId))
-                return false;
+            var result = _context.MeetingNotifications.Remove(meetingId);
 
             _notifications.Remove(meetingId, out MeetingNotificationDTO? value);
 
-            return true;
+            return result;
         }
 
         public IReadOnlyCollection<MeetingNotificationDTO> GetMeetingNotifications()
