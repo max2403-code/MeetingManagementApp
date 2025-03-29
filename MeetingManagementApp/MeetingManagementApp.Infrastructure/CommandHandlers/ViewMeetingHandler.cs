@@ -83,7 +83,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             };
         }
 
-        protected override ISet<string> GetAllowedCommands(string? requestValue)
+        protected override IReadOnlyCollection<string> GetAllowedCommands(string? requestValue)
         {
             var rval = new List<string>
             {
@@ -109,7 +109,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             rval.AddRange(["m", "q"]);
 
-            return rval.ToHashSet();
+            return rval;
         }
 
         public override string GetCommand()

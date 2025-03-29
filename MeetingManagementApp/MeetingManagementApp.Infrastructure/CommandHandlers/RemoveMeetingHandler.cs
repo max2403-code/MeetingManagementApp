@@ -20,9 +20,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             return "Удалить встречу.";
         }
 
-        protected override ISet<string> GetAllowedCommands(string? requestValue)
+        protected override IReadOnlyCollection<string> GetAllowedCommands(string? requestValue)
         {
-            return new HashSet<string>(["m", "q"]);
+            return ["m", "q"];
         }
 
         protected override CommandResult GetConsoleCommandResult(string? value)

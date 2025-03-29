@@ -12,7 +12,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             _consoleService = consoleService;
         }
 
-        public CommandHandlerResult Execute(string? requestValue, IReadOnlyDictionary<string, ICommandRequestHandler> handlers, IReadOnlyCollection<(string command, string? description)> commands)
+        public CommandHandlerResult Execute(string? requestValue, IReadOnlyDictionary<string, ICommandRequestHandler> handlers)
         {
             var rval = _consoleService.PrinterExecute(requestValue, GetConsoleCommandResult);
 

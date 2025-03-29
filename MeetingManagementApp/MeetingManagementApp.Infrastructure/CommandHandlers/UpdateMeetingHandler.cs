@@ -28,9 +28,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             return "Редактировать встречу.";
         }
 
-        protected override ISet<string> GetAllowedCommands(string? requestValue)
+        protected override IReadOnlyCollection<string> GetAllowedCommands(string? requestValue)
         {
-            return new HashSet<string>(["vm", "m", "q"]);
+            return ["vm", "m", "q"];
         }
 
         protected override CommandResult GetConsoleCommandResult(string? value)
@@ -41,6 +41,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             if (!meeting.Id.HasValue)
                 throw new Exception("Невозможно редактировать встречу.");
+
+            var meetingDTO = _meetingController.GetMeetingById(meeting.Id.Value);
 
             Console.WriteLine();
 
@@ -54,6 +56,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             }
             else
             {
+                Console.WriteLine($"Текущая дата встречи: {meetingDTO.MeetingStart:dd.MM.yyyy}");
+
                 Console.Write("Введите дату: ");
 
                 var onDateInput = Console.ReadLine()?.Split(".");
@@ -78,6 +82,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             }
             else
             {
+                Console.WriteLine($"Текущий заголовок встречи: {meetingDTO.Subject}");
+
                 Console.Write("Укажите заголовок: ");
 
                 subject = Console.ReadLine();
@@ -99,6 +105,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             }
             else
             {
+                Console.WriteLine($"Текущее описание встречи: {meetingDTO.Description}");
+
                 Console.Write("Укажите описание: ");
 
                 description = Console.ReadLine();
@@ -120,6 +128,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             }
             else
             {
+                Console.WriteLine($"Текущая время встречи: {meetingDTO.MeetingStart:HH:mm}");
+
                 Console.Write("Введите время начала встречи: ");
 
                 var meetingStartInput = Console.ReadLine();
@@ -143,6 +153,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             }
             else
             {
+                Console.WriteLine($"Текущая время встречи: {meetingDTO.MeetingEnd:HH:mm}");
+
                 Console.Write("Введите примерное время окончания встречи: ");
 
                 var meetingEndInput = Console.ReadLine();

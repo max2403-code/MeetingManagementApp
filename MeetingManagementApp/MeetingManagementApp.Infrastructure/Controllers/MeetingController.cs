@@ -7,10 +7,13 @@ namespace MeetingManagementApp.Infrastructure.Controllers
     internal class MeetingController : IMeetingController
     {
         private readonly IMeetingService _meetingService;
+        private readonly INotificationService _notificationService;
 
-        public MeetingController(IMeetingService meetingService)
+
+        public MeetingController(IMeetingService meetingService, INotificationService notificationService)
         {
             _meetingService = meetingService;
+            _notificationService = notificationService;
         }
 
         public int AddNewMeeting(MeetingDTO meeting)
@@ -69,5 +72,11 @@ namespace MeetingManagementApp.Infrastructure.Controllers
         {
             return _meetingService.ValidateMeetingMeetingOnDate(onDate);
         }
+
+        public bool RemoveMeetingNotification(int meetingId)
+        {
+            return _notificationService.RemoveMeetingNotification(meetingId);
+        }
+
     }
 }

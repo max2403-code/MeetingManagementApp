@@ -4,7 +4,7 @@ namespace MeetingManagementApp.Domain.Contracts
 {
     public interface ICommandRequestHandler
     {
-        CommandHandlerResult Execute(string? requestValue, IReadOnlyDictionary<string, ICommandRequestHandler> handlers, IReadOnlyCollection<(string command, string? description)> commands);
+        CommandHandlerResult Execute(string? requestValue, IReadOnlyDictionary<string, ICommandRequestHandler> handlers);
 
         string? GetCommandDescription() => null;
 

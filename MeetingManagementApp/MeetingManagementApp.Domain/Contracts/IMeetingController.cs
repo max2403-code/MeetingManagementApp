@@ -21,5 +21,7 @@ namespace MeetingManagementApp.Domain.Contracts
         int UpdateMeeting(MeetingDTO meeting);
         bool RemoveMeeting(int id);
         string? ValidateMeetingMeetingOnDate(DateTime onDate);
+        bool RemoveMeetingNotification(int meetingId);
+
     }
 }

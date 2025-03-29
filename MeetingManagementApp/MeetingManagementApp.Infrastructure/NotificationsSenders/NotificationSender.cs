@@ -22,33 +22,40 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
         {
             while (true)
             {
-                foreach (var notification in _notificationService.GetMeetingNotifications())
-                {
-                    var notificationJson = JsonSerializer.Serialize(notification);
-                    _notificationService.RemoveMeetingNotification(notification.MeetingId);
-                    Task.Run(() => _printerService.PrinterExecute(notificationJson, PrinterHandler));
-                }
+                var notifications = _notificationService.GetMeetingNotifications();
+
+                if (notifications.Count == 0)
+                    continue;
+
+                var notificationsJson = JsonSerializer.Serialize(notifications);
+                Task.Run(() => _printerService.PrinterExecute(notificationsJson, PrinterHandler));
             }
         }
 
-        private CommandResult PrinterHandler(string? notificationJson)
+        private CommandResult PrinterHandler(string? notificationsJson)
         {
-            var notification = JsonSerializer.Deserialize<MeetingNotificationDTO>(notificationJson);
-            var meeting = _meetingController.GetMeetingById(notification.MeetingId);
+            var notifications = JsonSerializer.Deserialize<IReadOnlyCollection<MeetingNotificationDTO>>(notificationsJson);
 
-            Console.WriteLine();
+            foreach(var notification in notifications)
+            {
+                var meeting = _meetingController.GetMeetingById(notification.MeetingId);
 
-            Console.WriteLine(new string('-', 20));
+                Console.WriteLine();
 
-            Console.WriteLine("Напоминание");
+                Console.WriteLine(new string('-', 40));
 
-            Console.WriteLine($"{meeting.Subject}");
+                Console.WriteLine("Напоминание");
 
-            Console.WriteLine($"Время начала встречи: {meeting.MeetingStart:dd.MM.yyyy HH:mm}");
+                Console.WriteLine($"{meeting.Subject}");
 
-            Console.WriteLine(new string('-', 20));
+                Console.WriteLine($"Время начала встречи: {meeting.MeetingStart:dd.MM.yyyy HH:mm}");
 
-            Console.WriteLine();
+                Console.WriteLine(new string('-', 40));
+
+                Console.WriteLine();
+
+                _meetingController.RemoveMeetingNotification(notification.MeetingId);
+            }
 
             return new CommandResult();
         }

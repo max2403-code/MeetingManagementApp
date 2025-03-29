@@ -167,9 +167,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             };
         }
 
-        protected override ISet<string> GetAllowedCommands(string? requestValue)
+        protected override IReadOnlyCollection<string> GetAllowedCommands(string? requestValue)
         {
-            return new HashSet<string>(["vm", "m", "q"]);
+            return ["vm", "m", "q"];
         }
 
         public override string GetCommand()

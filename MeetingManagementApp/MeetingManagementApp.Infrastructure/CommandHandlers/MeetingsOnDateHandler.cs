@@ -85,7 +85,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             };
         }
 
-        protected override ISet<string> GetAllowedCommands(string? requestValue)
+        protected override IReadOnlyCollection<string> GetAllowedCommands(string? requestValue)
         {
             var meeting = string.IsNullOrEmpty(requestValue) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(requestValue) ?? new MeetingInput();
 
@@ -95,9 +95,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             var meetings = _meetingController.GetMeetingsOnDate(meeting.OnDate.Value);
 
             if (meetings.Count == 0)
-                return new HashSet<string>(meeting.OnDate >= DateTime.Today ? ["am", "d", "m", "q"] : ["d", "m", "q"]);
+                return meeting.OnDate >= DateTime.Today ? ["am", "d", "m", "q"] : ["d", "m", "q"];
             else
-                return new HashSet<string>(meeting.OnDate >= DateTime.Today ? ["am", "vm", "d", "m", "q"] : ["vm", "d", "m", "q"]);
+                return meeting.OnDate >= DateTime.Today ? ["am", "vm", "d", "m", "q"] : ["vm", "d", "m", "q"];
         }
 
         public override string GetCommand()

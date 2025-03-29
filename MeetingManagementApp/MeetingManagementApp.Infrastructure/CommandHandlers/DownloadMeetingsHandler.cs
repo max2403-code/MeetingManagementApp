@@ -26,9 +26,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             return "Скачать встречи за выбранную дату.";
         }
 
-        protected override ISet<string> GetAllowedCommands(string? requestValue)
+        protected override IReadOnlyCollection<string> GetAllowedCommands(string? requestValue)
         {
-            return new HashSet<string>(["v", "m", "q"]);
+            return ["v", "m", "q"];
         }
 
         protected override CommandResult GetConsoleCommandResult(string? value)

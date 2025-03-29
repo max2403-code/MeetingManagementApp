@@ -7,13 +7,11 @@ namespace MeetingManagementApp.Api.MeetingApp
     {
         private readonly IBackgroundService _notificationSender;
         private readonly IReadOnlyDictionary<string, ICommandRequestHandler> _handlers;
-        private readonly IReadOnlyCollection<(string command, string? description)> _commands;
 
         public MeetingApp(IEnumerable<ICommandRequestHandler> handlers, IBackgroundService notificationSender)
         {
             _notificationSender = notificationSender;
             _handlers = handlers.ToDictionary(k => k.GetCommand());
-            _commands = handlers.Select(x => (x.GetCommand(), x.GetCommandDescription())).ToArray();
         }
 
         public void Run()
@@ -32,14 +30,14 @@ namespace MeetingManagementApp.Api.MeetingApp
             {
                 try
                 {
-                    var commandResult = handler.Execute(commandResultValue, _handlers, _commands);
+                    var commandResult = handler.Execute(commandResultValue, _handlers);
 
                     handler = commandResult.NextCommandRequestHandler;
                     commandResultValue = commandResult.Result;
                 }
                 catch(UserInputException ex)
                 {
-                    var exCommandResult = userInputExceptionHandler.Execute(ex.Message, _handlers, _commands);
+                    var exCommandResult = userInputExceptionHandler.Execute(ex.Message, _handlers);
 
                     if (exCommandResult.NextCommandRequestHandler != null) 
                     {

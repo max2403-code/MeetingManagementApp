@@ -22,9 +22,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             return new CommandResult();
         }
 
-        protected override ISet<string> GetAllowedCommands(string? requestValue)
+        protected override IReadOnlyCollection<string> GetAllowedCommands(string? requestValue)
         {
-            return new HashSet<string>(["v", "am", "q"]);
+            return ["v", "am", "q"];
         }
 
         public override string GetCommand()
