@@ -7,7 +7,7 @@ using MeetingManagementApp.Infrastructure.AbstractHandlers;
 using System.Globalization;
 using System.Text.Json;
 
-namespace MeetingManagementApp.Infrastructure.CommandHandlers
+namespace MeetingManagementApp.Infrastructure.CommandHandlers.Meeting
 {
     internal class AddNewMeetingHandler : AbstractCommandHandler
     {

@@ -5,7 +5,7 @@ using MeetingManagementApp.Domain.Models.Input;
 using MeetingManagementApp.Infrastructure.AbstractHandlers;
 using System.Text.Json;
 
-namespace MeetingManagementApp.Infrastructure.CommandHandlers
+namespace MeetingManagementApp.Infrastructure.CommandHandlers.Meeting
 {
     internal class DownloadMeetingsHandler : AbstractCommandHandler
     {

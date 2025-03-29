@@ -1,5 +1,8 @@
 ﻿using MeetingManagementApp.Domain.Contracts;
-using MeetingManagementApp.Infrastructure.CommandHandlers;
+using MeetingManagementApp.Infrastructure.CommandHandlers.Common;
+using MeetingManagementApp.Infrastructure.CommandHandlers.Exceptions;
+using MeetingManagementApp.Infrastructure.CommandHandlers.Meeting;
+using MeetingManagementApp.Infrastructure.CommandHandlers.Notifications;
 using MeetingManagementApp.Infrastructure.Controllers;
 using MeetingManagementApp.Infrastructure.NotificationsSenders;
 using MeetingManagementApp.Infrastructure.Services;

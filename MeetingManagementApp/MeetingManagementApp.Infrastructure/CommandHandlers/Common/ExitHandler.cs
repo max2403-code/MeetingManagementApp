@@ -1,7 +1,7 @@
 ﻿using MeetingManagementApp.Domain.Contracts;
 using MeetingManagementApp.Domain.Models.Common;
 
-namespace MeetingManagementApp.Infrastructure.CommandHandlers
+namespace MeetingManagementApp.Infrastructure.CommandHandlers.Common
 {
     internal class ExitHandler : ICommandRequestHandler
     {

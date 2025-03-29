@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MeetingManagementApp.Infrastructure.CommandHandlers
+namespace MeetingManagementApp.Infrastructure.CommandHandlers.Notifications
 {
     internal class DeleteMeetingNotificationHandler : AbstractCommandHandler
     {

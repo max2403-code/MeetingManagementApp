@@ -2,7 +2,7 @@
 using MeetingManagementApp.Domain.Models.Common;
 using MeetingManagementApp.Infrastructure.AbstractHandlers;
 
-namespace MeetingManagementApp.Infrastructure.CommandHandlers
+namespace MeetingManagementApp.Infrastructure.CommandHandlers.Common
 {
     internal class MainMenuHandler : AbstractCommandHandler
     {
