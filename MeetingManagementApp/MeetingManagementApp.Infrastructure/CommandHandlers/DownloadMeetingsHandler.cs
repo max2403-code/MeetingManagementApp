@@ -45,7 +45,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             var path = Console.ReadLine();
 
             if (string.IsNullOrEmpty(path) || !Path.IsPathRooted(path) || !Directory.Exists(path))
-                throw new BusinessException("Указан неверный путь.");
+                throw new UserInputException("Указан неверный путь.");
 
             var t = _meetingController.SaveMeetingsOnDateFileAsync(meeting.OnDate.Value, path);
 

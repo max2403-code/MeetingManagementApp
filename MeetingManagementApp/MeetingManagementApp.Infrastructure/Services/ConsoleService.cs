@@ -38,7 +38,7 @@ namespace MeetingManagementApp.Infrastructure.Services
             foreach (var command in commands)
                 Console.WriteLine($"{command.command} - {command.description}");
 
-            Console.WriteLine("");
+            Console.WriteLine();
 
             Console.WriteLine("Команда:");
 

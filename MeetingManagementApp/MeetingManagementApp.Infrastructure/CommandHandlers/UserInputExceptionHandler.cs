@@ -3,11 +3,11 @@ using MeetingManagementApp.Domain.Models.Common;
 
 namespace MeetingManagementApp.Infrastructure.CommandHandlers
 {
-    internal class ExceptionHandler : ICommandRequestHandler
+    internal class UserInputExceptionHandler : ICommandRequestHandler
     {
         private readonly IPrinterService _consoleService;
 
-        public ExceptionHandler(IPrinterService consoleService) 
+        public UserInputExceptionHandler(IPrinterService consoleService)
         {
             _consoleService = consoleService;
         }
@@ -16,12 +16,15 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
         {
             var rval = _consoleService.PrinterExecute(requestValue, GetConsoleCommandResult);
 
-            return new CommandHandlerResult();
+            return new CommandHandlerResult
+            {
+                NextCommandRequestHandler = string.IsNullOrEmpty(rval.Command) ? null : handlers["m"],
+            };
         }
 
         public string GetCommand()
         {
-            return "ex";
+            return "uex";
         }
 
         private CommandResult GetConsoleCommandResult(string? value)
@@ -30,11 +33,15 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             Console.WriteLine($"Ошибка: {value}");
 
-            Console.WriteLine($"Нажмите на любую клавишу...");
+            Console.WriteLine($"Для повтора последней операции нажмите Enter...");
+            Console.WriteLine($"Для выхода в главное меню нажмите на любую клавишу...");
 
-            Console.ReadKey();
+            var input = Console.ReadLine();
 
-            return new CommandResult();
+            return new CommandResult
+            {
+                Command = input,
+            };
         }
     }
 }

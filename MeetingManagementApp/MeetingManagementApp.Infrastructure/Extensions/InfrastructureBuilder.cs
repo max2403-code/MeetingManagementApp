@@ -34,10 +34,10 @@ namespace MeetingManagementApp.Infrastructure.Extensions
 
 
             services.AddSingleton<ICommandRequestHandler, RemoveMeetingHandler>();
+            services.AddSingleton<ICommandRequestHandler, UserInputExceptionHandler>();
 
 
 
-            //services.AddKeyedSingleton<ICommandRequestHandler, MainMenuHandler>("m");
 
         }
     }

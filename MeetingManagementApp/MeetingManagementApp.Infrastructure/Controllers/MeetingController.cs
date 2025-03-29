@@ -64,5 +64,10 @@ namespace MeetingManagementApp.Infrastructure.Controllers
         {
             return _meetingService.ValidateMeetingSubject(subject);
         }
+
+        public string? ValidateMeetingMeetingOnDate(DateTime onDate)
+        {
+            return _meetingService.ValidateMeetingMeetingOnDate(onDate);
+        }
     }
 }

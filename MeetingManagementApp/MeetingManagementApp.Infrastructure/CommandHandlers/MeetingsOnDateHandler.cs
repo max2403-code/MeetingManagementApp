@@ -44,7 +44,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 var onDateInput = Console.ReadLine()?.Split(".");
 
-                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("/", onDateInput[1], onDateInput[0], onDateInput[2]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new BusinessException("Введена неверная дата.");
+                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("-", onDateInput[2], onDateInput[1], onDateInput[0]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new UserInputException("Введена неверная дата.");
                 meeting.OnDate = onDate;
             }
 
@@ -95,9 +95,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             var meetings = _meetingController.GetMeetingsOnDate(meeting.OnDate.Value);
 
             if (meetings.Count == 0)
-                return new HashSet<string>(["am", "d", "m", "q"]);
+                return new HashSet<string>(meeting.OnDate >= DateTime.Today ? ["am", "d", "m", "q"] : ["d", "m", "q"]);
             else
-                return new HashSet<string>(["am", "vm", "d", "m", "q"]);
+                return new HashSet<string>(meeting.OnDate >= DateTime.Today ? ["am", "vm", "d", "m", "q"] : ["vm", "d", "m", "q"]);
         }
 
         public override string GetCommand()

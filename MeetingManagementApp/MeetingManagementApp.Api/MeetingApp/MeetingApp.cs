@@ -20,6 +20,7 @@ namespace MeetingManagementApp.Api.MeetingApp
         {
             var startHandler = _handlers["m"];
             var exceptionHandler = _handlers["ex"];
+            var userInputExceptionHandler = _handlers["uex"];
 
             var handler = startHandler;
             
@@ -36,14 +37,21 @@ namespace MeetingManagementApp.Api.MeetingApp
                     handler = commandResult.NextCommandRequestHandler;
                     commandResultValue = commandResult.Result;
                 }
-                catch(BusinessException ex)
+                catch(UserInputException ex)
                 {
-                    commandResultValue = ex.Value;
-                    exceptionHandler.Execute(ex.Message, _handlers, _commands);
+                    var exCommandResult = userInputExceptionHandler.Execute(ex.Message, _handlers, _commands);
+
+                    if (exCommandResult.NextCommandRequestHandler != null) 
+                    {
+                        handler = exCommandResult.NextCommandRequestHandler;
+                        commandResultValue = exCommandResult.Result;
+                    }
+                   else
+                        commandResultValue = ex.Value;
                 }
                 catch(Exception ex) 
                 {
-                    var exCommandResult = exceptionHandler.Execute(ex.Message, _handlers, _commands);
+                    exceptionHandler.Execute(ex.Message, _handlers, _commands);
                     handler = startHandler; //exCommandResult.NextCommandRequestHandler;
                     commandResultValue = null;
                 }

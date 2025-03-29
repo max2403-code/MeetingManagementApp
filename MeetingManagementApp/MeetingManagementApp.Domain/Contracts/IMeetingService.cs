@@ -12,6 +12,8 @@ namespace MeetingManagementApp.Domain.Contracts
 
         string? ValidateMeetingDescription(string? description);
 
+        string? ValidateMeetingMeetingOnDate(DateTime onDate);
+
         string? ValidateMeetingMeetingStart(DateTime meetingStart, int? meetingId = null);
 
         string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd, int? meetingId = null);

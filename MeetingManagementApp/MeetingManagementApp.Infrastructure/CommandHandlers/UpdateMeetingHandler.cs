@@ -58,7 +58,13 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 var onDateInput = Console.ReadLine()?.Split(".");
 
-                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("/", onDateInput[1], onDateInput[0], onDateInput[2]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new BusinessException("Введена неверная дата.");
+                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("/", onDateInput[2], onDateInput[1], onDateInput[0]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new UserInputException("Введена неверная дата.");
+
+                var error = _meetingController.ValidateMeetingMeetingOnDate(onDate.Value);
+
+                if (!string.IsNullOrEmpty(error))
+                    throw new UserInputException(error, JsonSerializer.Serialize(meeting));
+
                 meeting.OnDate = onDate;
             }
 
@@ -78,7 +84,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 var error = _meetingController.ValidateMeetingSubject(subject);
 
                 if (!string.IsNullOrEmpty(error))
-                    throw new BusinessException(error, JsonSerializer.Serialize(meeting));
+                    throw new UserInputException(error, JsonSerializer.Serialize(meeting));
 
                 meeting.Subject = subject;
             }
@@ -99,7 +105,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 var error = _meetingController.ValidateMeetingDescription(description);
 
                 if (!string.IsNullOrEmpty(error))
-                    throw new BusinessException(error, JsonSerializer.Serialize(meeting));
+                    throw new UserInputException(error, JsonSerializer.Serialize(meeting));
 
                 meeting.Description = description;
             }
@@ -117,12 +123,12 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 Console.Write("Введите время начала встречи: ");
 
                 var meetingStartInput = Console.ReadLine();
-                meetingStart = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("MM/dd/yyyy"), CultureInfo.InvariantCulture, meetingStartInput), out var val) ? val.Date : throw new BusinessException("Введено неверное время начала встречи.");
+                meetingStart = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("yyyy-MM-dd"), CultureInfo.InvariantCulture, meetingStartInput + ":00"), out var val) ? val : throw new UserInputException("Введено неверное время начала встречи.");
 
                 var error = _meetingController.ValidateMeetingMeetingStart(meetingStart.Value, meeting.Id);
 
                 if (!string.IsNullOrEmpty(error))
-                    throw new BusinessException(error, JsonSerializer.Serialize(meeting));
+                    throw new UserInputException(error, JsonSerializer.Serialize(meeting));
 
                 meeting.MeetingStart = meetingStart;
             }
@@ -140,12 +146,12 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 Console.Write("Введите примерное время окончания встречи: ");
 
                 var meetingEndInput = Console.ReadLine();
-                meetingEnd = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("MM/dd/yyyy"), CultureInfo.InvariantCulture, meetingEndInput), out var val) ? val.Date : throw new BusinessException("Введено неверное время окончания встречи.");
+                meetingEnd = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("yyyy-MM-dd"), CultureInfo.InvariantCulture, meetingEndInput + ":00"), out var val) ? val : throw new UserInputException("Введено неверное время окончания встречи.");
 
                 var error = _meetingController.ValidateMeetingMeetingEnd(meetingStart.Value, meetingEnd.Value, meeting.Id);
 
                 if (!string.IsNullOrEmpty(error))
-                    throw new BusinessException(error, JsonSerializer.Serialize(meeting));
+                    throw new UserInputException(error, JsonSerializer.Serialize(meeting));
 
                 meeting.MeetingEnd = meetingEnd;
             }

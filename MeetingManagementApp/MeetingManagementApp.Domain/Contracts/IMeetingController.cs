@@ -20,5 +20,6 @@ namespace MeetingManagementApp.Domain.Contracts
         Task<int> SaveMeetingsOnDateFileAsync(DateTime onDate, string folderPath);
         int UpdateMeeting(MeetingDTO meeting);
         bool RemoveMeeting(int id);
+        string? ValidateMeetingMeetingOnDate(DateTime onDate);
     }
 }

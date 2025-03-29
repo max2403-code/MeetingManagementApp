@@ -58,31 +58,6 @@ namespace MeetingManagementApp.Infrastructure.Services
             return entityIndex;
         }
 
-        //public string? ValidateMeeting(MeetingDTO meeting)
-        //{
-        //    if (meeting.MeetingStart < DateTime.Now)
-        //        return "Встречу можно планировать только в будущем.";
-
-        //    var isMeetingExist = _context.Meetings.Values.Any(x =>
-        //        x.MeetingStart <= meeting.MeetingStart && x.MeetingEnd >= meeting.MeetingStart ||
-        //        x.MeetingStart <= meeting.MeetingEnd && x.MeetingEnd >= meeting.MeetingEnd ||
-        //        x.MeetingStart <= meeting.MeetingStart && x.MeetingEnd >= meeting.MeetingEnd);
-
-        //    if (isMeetingExist)
-        //        return "На данный промежуток времени уже запланирована другая встреча.";
-
-        //    if (meeting.MeetingStart >= meeting.MeetingEnd)
-        //        return "Окончание встречи не может быть раньше ее начала.";
-
-        //    if (!string.IsNullOrEmpty(meeting.Description))
-        //        return "Описание встречи должно быть заполнено.";
-
-        //    if (!string.IsNullOrEmpty(meeting.Subject))
-        //        return "Заголовок встречи должен быть заполнен.";
-
-        //    return null;
-        //}
-
         public string? ValidateMeetingSubject(string? subject)
         {
             if (string.IsNullOrEmpty(subject))
@@ -94,6 +69,13 @@ namespace MeetingManagementApp.Infrastructure.Services
         {
             if (string.IsNullOrEmpty(description))
                 return "Заголовок встречи должен быть заполнен.";
+            return null;
+        }
+
+        public string? ValidateMeetingMeetingOnDate(DateTime onDate)
+        {
+            if (onDate.Date < DateTime.Today)
+                return "Встречу можно планировать только в будущем.";
             return null;
         }
 
@@ -209,6 +191,7 @@ namespace MeetingManagementApp.Infrastructure.Services
                 await streamWriter.WriteAsync("Встречи на данную дату отсутствуют.");
                 return;
             }
+            await Task.Delay(5000);
 
             foreach (var item in items)
             {
