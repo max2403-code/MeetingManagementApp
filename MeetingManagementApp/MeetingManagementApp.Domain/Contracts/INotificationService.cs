@@ -8,8 +8,10 @@ namespace MeetingManagementApp.Domain.Contracts
 
         int UpdateMeetingNotification(MeetingNotificationDTO notification);
 
-        string? ValidateMeetingNotification(MeetingNotificationDTO notification);
+        string? ValidateMeetingNotificationTime(DateTime notificationTime, int meetingId);
 
+        string? ValidateMeetingNotificationOnDate(DateTime onDate, int meetingId);
+       
         bool RemoveMeetingNotification(int meetingId);
 
         IReadOnlyCollection<MeetingNotificationDTO> GetMeetingNotifications();

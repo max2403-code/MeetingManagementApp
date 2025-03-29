@@ -46,22 +46,31 @@ namespace MeetingManagementApp.Infrastructure.Services
             return 1;
         }
 
-        public string? ValidateMeetingNotification(MeetingNotificationDTO notification)
+        public string? ValidateMeetingNotificationTime(DateTime notificationTime, int meetingId)
         {
-            if (!_context.Meetings.TryGetValue(notification.MeetingId, out var meeting))
+            if (!_context.Meetings.TryGetValue(meetingId, out var meeting))
                 return "Встречи для данного уведомления не существует.";
 
-            if (notification.NotificationTime < DateTime.Now || notification.NotificationTime > meeting.MeetingStart)
+            if (notificationTime < DateTime.Now || notificationTime > meeting.MeetingStart)
                 return "Указано неверное время уведомления.";
+
+            return null;
+        }
+
+        public string? ValidateMeetingNotificationOnDate(DateTime onDate, int meetingId)
+        {
+            if (!_context.Meetings.TryGetValue(meetingId, out var meeting))
+                return "Встречи для данного уведомления не существует.";
+
+            if (onDate < DateTime.Today || onDate > meeting.MeetingStart.Date)
+                return "Указана неверная дата уведомления.";
 
             return null;
         }
 
         public bool RemoveMeetingNotification(int meetingId)
         {
-            var result = _context.MeetingNotifications.Remove(meetingId);
-
-            _notifications.Remove(meetingId, out MeetingNotificationDTO? value);
+            var result = _context.MeetingNotifications.Remove(meetingId) && _notifications.Remove(meetingId, out MeetingNotificationDTO? value);
 
             return result;
         }
@@ -76,7 +85,7 @@ namespace MeetingManagementApp.Infrastructure.Services
 
         public MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId)
         {
-            if (_context.MeetingNotifications.TryGetValue(meetingId, out var value) || value == null)
+            if (!_context.MeetingNotifications.TryGetValue(meetingId, out var value) || value == null)
                 throw new Exception("Запрашиваемое уведомление отсутствует.");
 
             return new MeetingNotificationDTO

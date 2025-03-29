@@ -144,7 +144,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             }
             else
             {
-                Console.WriteLine($"Текущая время встречи: {meetingDTO.MeetingStart:HH:mm}");
+                Console.WriteLine($"Текущее время начала встречи: {meetingDTO.MeetingStart:HH:mm}");
 
                 Console.Write("Введите время начала встречи: ");
 
@@ -186,7 +186,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 meeting.MeetingEnd = meetingEnd;
             }
 
-            _meetingController.UpdateMeeting(new MeetingDTO
+            var rval = _meetingController.UpdateMeeting(new MeetingDTO
             {
                 Id = meeting.Id,
                 Subject = subject,
@@ -198,6 +198,13 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             Console.WriteLine();
 
             Console.WriteLine("Встреча успешно обновлена.");
+
+            if (rval.isNotificationDeleted)
+            {
+                Console.WriteLine();
+
+                Console.WriteLine("Напоминание о встрече было удалено, так как было изменено начало встречи!");
+            }
 
             return new CommandResult
             {

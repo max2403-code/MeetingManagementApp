@@ -27,6 +27,9 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
                 if (notifications.Count == 0)
                     continue;
 
+                foreach (var notification in notifications)
+                    _notificationService.RemoveMeetingNotification(notification.MeetingId);
+
                 var notificationsJson = JsonSerializer.Serialize(notifications);
                 Task.Run(() => _printerService.PrinterExecute(notificationsJson, PrinterHandler));
             }
@@ -53,9 +56,9 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
                 Console.WriteLine(new string('-', 40));
 
                 Console.WriteLine();
-
-                _meetingController.RemoveMeetingNotification(notification.MeetingId);
             }
+
+            Console.ReadKey();
 
             return new CommandResult();
         }

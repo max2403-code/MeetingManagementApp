@@ -57,7 +57,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 id = int.TryParse(idInput, out var val) ? val : throw new UserInputException("Введен некорректный номер встречи.", JsonSerializer.Serialize(meeting));
             }
 
-            var meetingDTO = _meetingController.GetMeetingById(id.Value, meeting.OnDate);
+            var meetingDTO = _meetingController.GetMeetingById(id.Value, meeting.OnDate) ?? throw new Exception("Невозможно открыть встречу.");
 
             Console.WriteLine();
             Console.WriteLine(new string('-', 40));
@@ -67,6 +67,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             Console.WriteLine();
             Console.WriteLine($"Заголовок: {meetingDTO.Subject}");
+
+            Console.WriteLine();
+            Console.WriteLine($"Дата: {meetingDTO.MeetingStart:dd.MM.yyyy}");
 
             Console.WriteLine();
             Console.WriteLine($"Начало: {meetingDTO.MeetingStart:HH:mm}");

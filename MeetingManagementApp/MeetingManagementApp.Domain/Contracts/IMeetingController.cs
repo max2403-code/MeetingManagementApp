@@ -18,10 +18,22 @@ namespace MeetingManagementApp.Domain.Contracts
 
         string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd, int? meetingId = null);
         Task<int> SaveMeetingsOnDateFileAsync(DateTime onDate, string folderPath);
-        int UpdateMeeting(MeetingDTO meeting);
+        (int result, bool isNotificationDeleted) UpdateMeeting(MeetingDTO meeting);
         bool RemoveMeeting(int id);
         string? ValidateMeetingMeetingOnDate(DateTime onDate);
         bool RemoveMeetingNotification(int meetingId);
+
+
+
+
+
+        string? ValidateMeetingNotificationTime(DateTime notificationTime, int meetingId);
+
+        string? ValidateMeetingNotificationOnDate(DateTime onDate, int meetingId);
+        int AddNewMeetingNotification(MeetingNotificationDTO notification);
+
+        int UpdateMeetingNotification(MeetingNotificationDTO notification);
+        MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId);
 
     }
 }

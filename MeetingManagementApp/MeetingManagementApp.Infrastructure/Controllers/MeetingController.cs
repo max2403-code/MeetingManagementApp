@@ -43,7 +43,7 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             return 1;
         }
 
-        public int UpdateMeeting(MeetingDTO meeting)
+        public (int result, bool isNotificationDeleted) UpdateMeeting(MeetingDTO meeting)
         {
             return _meetingService.UpdateMeeting(meeting);
         }
@@ -78,5 +78,29 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             return _notificationService.RemoveMeetingNotification(meetingId);
         }
 
+        public string? ValidateMeetingNotificationTime(DateTime notificationTime, int meetingId)
+        {
+            return _notificationService.ValidateMeetingNotificationTime(notificationTime, meetingId);
+        }
+
+        public string? ValidateMeetingNotificationOnDate(DateTime onDate, int meetingId)
+        {
+            return _notificationService.ValidateMeetingNotificationOnDate(onDate, meetingId);
+        }
+
+        public int AddNewMeetingNotification(MeetingNotificationDTO notification)
+        {
+            return _notificationService.AddNewMeetingNotification(notification);
+        }
+
+        public int UpdateMeetingNotification(MeetingNotificationDTO notification)
+        {
+            return _notificationService.UpdateMeetingNotification(notification);
+        }
+
+        public MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId)
+        {
+            return _notificationService.GetMeetingNotificationByMeetingId(meetingId);
+        }
     }
 }

@@ -122,22 +122,24 @@ namespace MeetingManagementApp.Infrastructure.Services
             return result;
         }
 
-        public int UpdateMeeting(MeetingDTO meeting)
+        public (int result, bool isNotificationDeleted) UpdateMeeting(MeetingDTO meeting)
         {
             if (!meeting.Id.HasValue)
                 throw new Exception("Невозможно обновить данные о встрече.");
 
-            //var currentMeetingStart = _context.Meetings[meeting.Id.Value].MeetingStart;
+            var isNotificationDeleted = false;
+
+            var currentMeetingStart = _context.Meetings[meeting.Id.Value].MeetingStart;
 
             _context.Meetings[meeting.Id.Value].MeetingStart = meeting.MeetingStart;
             _context.Meetings[meeting.Id.Value].MeetingEnd = meeting.MeetingEnd;
             _context.Meetings[meeting.Id.Value].Description = meeting.Description;
             _context.Meetings[meeting.Id.Value].Subject = meeting.Subject;
 
-            //if (currentMeetingStart != meeting.MeetingStart)
-            //    _notificationService.RemoveMeetingNotification(meeting.Id.Value);
+            if (currentMeetingStart != meeting.MeetingStart)
+                isNotificationDeleted = _notificationService.RemoveMeetingNotification(meeting.Id.Value);
 
-            return 1;
+            return (1, isNotificationDeleted);
         }
 
         public MeetingDTO GetMeetingById(int id, DateTime? onDate = null)
@@ -184,14 +186,14 @@ namespace MeetingManagementApp.Infrastructure.Services
 
             await streamWriter.WriteLineAsync($"Список встреч за {onDate:dd.MM.yyyy}:");
 
+            await Task.Delay(5000);
+
             if (items.Count == 0)
             {
-                await Task.Delay(5000);
                 await streamWriter.WriteLineAsync();
                 await streamWriter.WriteAsync("Встречи на данную дату отсутствуют.");
                 return;
             }
-            await Task.Delay(5000);
 
             foreach (var item in items)
             {

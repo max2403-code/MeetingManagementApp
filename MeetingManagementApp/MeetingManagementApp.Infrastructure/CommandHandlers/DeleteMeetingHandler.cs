@@ -6,11 +6,11 @@ using System.Text.Json;
 
 namespace MeetingManagementApp.Infrastructure.CommandHandlers
 {
-    internal class RemoveMeetingHandler : AbstractCommandHandler
+    internal class DeleteMeetingHandler : AbstractCommandHandler
     {
         private readonly IMeetingController _meetingController;
 
-        public RemoveMeetingHandler(IPrinterService consoleService, IMeetingController meetingController) : base(consoleService)
+        public DeleteMeetingHandler(IPrinterService consoleService, IMeetingController meetingController) : base(consoleService)
         {
             _meetingController = meetingController;
         }

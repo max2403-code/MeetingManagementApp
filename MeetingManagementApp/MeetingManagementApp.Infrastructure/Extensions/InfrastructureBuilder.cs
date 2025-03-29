@@ -33,9 +33,13 @@ namespace MeetingManagementApp.Infrastructure.Extensions
 
 
 
-            services.AddSingleton<ICommandRequestHandler, RemoveMeetingHandler>();
+            services.AddSingleton<ICommandRequestHandler, DeleteMeetingHandler>();
             services.AddSingleton<ICommandRequestHandler, UserInputExceptionHandler>();
 
+            services.AddSingleton<ICommandRequestHandler, AddNewMeetingNotificationHandler>();
+            services.AddSingleton<ICommandRequestHandler, UpdateMeetingNotificationHandler>();
+            services.AddSingleton<ICommandRequestHandler, DeleteMeetingNotificationHandler>();
+            services.AddSingleton<ICommandRequestHandler, ViewMeetingNotificationHandler>();
 
 
 

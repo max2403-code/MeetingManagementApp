@@ -89,6 +89,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                     Console.WriteLine();
                     Console.WriteLine($"Уведомление: {(item.MeetingNotification != null ? item.MeetingNotification.NotificationTime.ToString("dd.MM.yyyy HH:mm") : "Отсутствует")}");
+
+                    Console.WriteLine();
                 }
 
             return new CommandResult

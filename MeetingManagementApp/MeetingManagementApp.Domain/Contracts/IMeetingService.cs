@@ -20,7 +20,7 @@ namespace MeetingManagementApp.Domain.Contracts
 
         bool RemoveMeeting(int id);
 
-        int UpdateMeeting(MeetingDTO meeting);
+        (int result, bool isNotificationDeleted) UpdateMeeting(MeetingDTO meeting);
 
         MeetingDTO GetMeetingById(int id, DateTime? onDate = null);
 
