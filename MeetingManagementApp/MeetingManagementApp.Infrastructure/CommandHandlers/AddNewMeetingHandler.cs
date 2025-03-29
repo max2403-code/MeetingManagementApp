@@ -29,6 +29,13 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             var meeting = string.IsNullOrEmpty(value) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(value) ?? new MeetingInput();
 
+            if (meeting.IsFirstCommandCall)
+                meeting = new MeetingInput
+                {
+                    OnDate = meeting.OnDate,
+                    IsFirstCommandCall = false
+                };
+
             Console.WriteLine();
 
             var onDate = meeting.OnDate;
@@ -45,7 +52,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 var onDateInput = Console.ReadLine()?.Split(".");
 
-                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("-", onDateInput[2], onDateInput[1], onDateInput[0]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new UserInputException("Введена неверная дата.");
+                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("-", onDateInput[2], onDateInput[1], onDateInput[0]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new UserInputException("Введена неверная дата.", JsonSerializer.Serialize(meeting));
 
                 var error = _meetingController.ValidateMeetingMeetingOnDate(onDate.Value);
 
@@ -54,6 +61,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 meeting.OnDate = onDate;
             }
+
+            Console.WriteLine();
 
             var subject = meeting.Subject;
 
@@ -76,6 +85,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 meeting.Subject = subject;
             }
 
+            Console.WriteLine();
+
             var description = meeting.Description;
 
             if (description != null)
@@ -97,6 +108,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 meeting.Description = description;
             }
 
+            Console.WriteLine();
+
             var meetingStart = meeting.MeetingStart;
 
             if (meetingStart.HasValue)
@@ -111,7 +124,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 var meetingStartInput = Console.ReadLine();
 
-                meetingStart = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("yyyy-MM-dd"), meetingStartInput + ":00"), CultureInfo.InvariantCulture, out var val) ? val : throw new UserInputException("Введено неверное время начала встречи.");
+                meetingStart = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("yyyy-MM-dd"), meetingStartInput + ":00"), CultureInfo.InvariantCulture, out var val) ? val : throw new UserInputException("Введено неверное время начала встречи.", JsonSerializer.Serialize(meeting));
 
                 var error = _meetingController.ValidateMeetingMeetingStart(meetingStart.Value);
 
@@ -121,6 +134,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 meeting.MeetingStart = meetingStart;
             }
+
+            Console.WriteLine();
 
             var meetingEnd = meeting.MeetingEnd;
 
@@ -135,7 +150,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 Console.Write("Введите примерное время окончания встречи: ");
 
                 var meetingEndInput = Console.ReadLine();
-                meetingEnd = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("yyyy-MM-dd"), meetingEndInput + ":00"), CultureInfo.InvariantCulture, out var val) ? val : throw new UserInputException("Введено неверное время окончания встречи.");
+                meetingEnd = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("yyyy-MM-dd"), meetingEndInput + ":00"), CultureInfo.InvariantCulture, out var val) ? val : throw new UserInputException("Введено неверное время окончания встречи.", JsonSerializer.Serialize(meeting));
 
                 var error = _meetingController.ValidateMeetingMeetingEnd(meetingStart.Value, meetingEnd.Value);
 
@@ -162,7 +177,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
                 ResultValue = meeting != null ? JsonSerializer.Serialize(new MeetingInput
                 {
                     Id = meeting.Id,
-                    //OnDate = meeting.OnDate,
+                    IsFirstCommandCall = true
                 }) : null,
             };
         }

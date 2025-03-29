@@ -37,6 +37,13 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             var meeting = string.IsNullOrEmpty(value) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(value) ?? new MeetingInput();
 
+            if (meeting.IsFirstCommandCall)
+                meeting = new MeetingInput
+                {
+                    OnDate = meeting.OnDate,
+                    IsFirstCommandCall = false
+                };
+
             if (!meeting.OnDate.HasValue)
                 throw new Exception("Ошибка скачивания.");
 
@@ -45,7 +52,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             var path = Console.ReadLine();
 
             if (string.IsNullOrEmpty(path) || !Path.IsPathRooted(path) || !Directory.Exists(path))
-                throw new UserInputException("Указан неверный путь.");
+                throw new UserInputException("Указан неверный путь.", JsonSerializer.Serialize(meeting));
 
             var t = _meetingController.SaveMeetingsOnDateFileAsync(meeting.OnDate.Value, path);
 

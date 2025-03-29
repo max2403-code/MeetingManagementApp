@@ -31,6 +31,13 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             var meeting = string.IsNullOrEmpty(value) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(value) ?? new MeetingInput();
 
+            if (meeting.IsFirstCommandCall)
+                meeting = new MeetingInput
+                {
+                    Id = meeting.Id,
+                    IsFirstCommandCall = false
+                };
+
             if (!meeting.Id.HasValue)
                 throw new Exception("Невозможно удалить встречу.");
 

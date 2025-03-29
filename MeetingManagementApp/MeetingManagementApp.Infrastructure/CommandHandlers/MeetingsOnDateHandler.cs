@@ -28,6 +28,13 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             var meeting = string.IsNullOrEmpty(value) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(value) ?? new MeetingInput();
 
+            if (meeting.IsFirstCommandCall)
+                meeting = new MeetingInput
+                {
+                    OnDate = meeting.OnDate,
+                    IsFirstCommandCall = false
+                };
+
             Console.WriteLine();
 
             var onDate = meeting.OnDate;
@@ -44,7 +51,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 var onDateInput = Console.ReadLine()?.Split(".");
 
-                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("-", onDateInput[2], onDateInput[1], onDateInput[0]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new UserInputException("Введена неверная дата.");
+                onDate = onDateInput?.Length == 3 && DateTime.TryParse(string.Join("-", onDateInput[2], onDateInput[1], onDateInput[0]), CultureInfo.InvariantCulture, out var val) ? val.Date : throw new UserInputException("Введена неверная дата.", JsonSerializer.Serialize(meeting));
                 meeting.OnDate = onDate;
             }
 
@@ -81,7 +88,11 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             return new CommandResult
             {
-                ResultValue = meeting != null ? JsonSerializer.Serialize(meeting) : null,
+                ResultValue = meeting != null ? JsonSerializer.Serialize(new MeetingInput
+                {
+                    OnDate = onDate,
+                    IsFirstCommandCall = true,
+                }) : null,
             };
         }
 

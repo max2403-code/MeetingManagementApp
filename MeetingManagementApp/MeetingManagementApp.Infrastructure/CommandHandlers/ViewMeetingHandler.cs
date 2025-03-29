@@ -27,6 +27,14 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             var meeting = string.IsNullOrEmpty(value) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(value) ?? new MeetingInput();
 
+            if (meeting.IsFirstCommandCall)
+                meeting = new MeetingInput
+                {
+                    Id = meeting.Id,
+                    OnDate = meeting.OnDate,
+                    IsFirstCommandCall = false
+                };
+
             Console.WriteLine();
 
             var id = meeting.Id;
@@ -43,21 +51,13 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
                 var idInput = Console.ReadLine();
 
-                id = int.TryParse(idInput, out var val) ? val : throw new UserInputException("Введен некорректный номер встречи.");
+                id = int.TryParse(idInput, out var val) ? val : throw new UserInputException("Введен некорректный номер встречи.", JsonSerializer.Serialize(meeting));
             }
 
             var meetingDTO = _meetingController.GetMeetingById(id.Value, meeting.OnDate);
 
-            meeting.Id = id;
-            meeting.MeetingStart = meetingDTO.MeetingStart;
-            meeting.MeetingNotification = meetingDTO.MeetingNotification != null ? new MeetingNotificationInput
-            {
-                MeetingId = meetingDTO.MeetingNotification.MeetingId,
-                NotificationTime = meetingDTO.MeetingNotification.NotificationTime,
-            } : null;
-
             Console.WriteLine();
-            Console.WriteLine(new string('-', 20));
+            Console.WriteLine(new string('-', 40));
 
             Console.WriteLine();
             Console.WriteLine($"Номер встречи: {meetingDTO.Id}");
@@ -79,7 +79,17 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             return new CommandResult
             {
-                ResultValue = meeting != null ? JsonSerializer.Serialize(meeting) : null,
+                ResultValue = meeting != null ? JsonSerializer.Serialize(new MeetingInput
+                {
+                    Id = id,
+                    MeetingStart = meetingDTO.MeetingStart,
+                    MeetingNotification = meetingDTO.MeetingNotification != null ? new MeetingNotificationInput
+                    {
+                        MeetingId = meetingDTO.MeetingNotification.MeetingId,
+                        NotificationTime = meetingDTO.MeetingNotification.NotificationTime,
+                    } : null,
+                    IsFirstCommandCall = true
+                }) : null,
             };
         }
 
@@ -101,7 +111,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
             {
                 rval.AddRange(["um", "dm"]);
 
-                if (meeting.MeetingNotification != null)
+                if (meeting.MeetingNotification == null)
                     rval.Add("an");
                 else
                     rval.Add("vn");

@@ -1,6 +1,6 @@
 ﻿namespace MeetingManagementApp.Domain.Models.Input
 {
-    public class MeetingInput
+    public class MeetingInput : Input
     {
         public int? Id { get; set; }
         public DateTime? OnDate { get; set; }

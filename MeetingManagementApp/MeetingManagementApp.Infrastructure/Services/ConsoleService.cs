@@ -33,7 +33,8 @@ namespace MeetingManagementApp.Infrastructure.Services
             Console.WriteLine("Выберите команду:");
 
             foreach (var command in commands)
-                Console.WriteLine($"{command} - {handlers[command]}");
+                if (handlers.TryGetValue(command, out var handler)) 
+                    Console.WriteLine($"{command} - {handler.GetCommandDescription()}");
 
             Console.WriteLine();
 

@@ -26,7 +26,7 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
 
             return new CommandHandlerResult
             {
-                NextCommandRequestHandler = handlers[consoleCommandResult.Command],
+                NextCommandRequestHandler = handlers.TryGetValue(consoleCommandResult.Command, out var handler) ? handler : throw new Exception($"Обработчик команды \"{consoleCommandResult.Command}\" отсутствует"),
                 Result = consoleCommandResult.ResultValue
             };
         }

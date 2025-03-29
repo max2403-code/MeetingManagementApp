@@ -49,7 +49,7 @@ namespace MeetingManagementApp.Api.MeetingApp
                 }
                 catch(Exception ex) 
                 {
-                    exceptionHandler.Execute(ex.Message, _handlers, _commands);
+                    exceptionHandler.Execute(ex.Message, _handlers);
                     handler = startHandler; //exCommandResult.NextCommandRequestHandler;
                     commandResultValue = null;
                 }
