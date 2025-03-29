@@ -30,12 +30,19 @@ namespace MeetingManagementApp.Infrastructure.Services
         private string? GetUserCommand(IReadOnlyDictionary<string, ICommandRequestHandler> handlers, IReadOnlyCollection<string> commands) 
         {
             Console.WriteLine(new string('-', 40));
+            Console.WriteLine();
+
             Console.WriteLine("Выберите команду:");
 
             foreach (var command in commands)
-                if (handlers.TryGetValue(command, out var handler)) 
+            {
+                if (handlers.TryGetValue(command, out var handler))
+                {
+                    Console.WriteLine();
                     Console.WriteLine($"{command} - {handler.GetCommandDescription()}");
-
+                }
+            }
+                
             Console.WriteLine();
 
             Console.WriteLine("Команда:");

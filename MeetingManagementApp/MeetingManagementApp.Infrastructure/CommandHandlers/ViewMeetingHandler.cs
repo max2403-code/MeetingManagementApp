@@ -18,12 +18,15 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
         public override string? GetCommandDescription()
         {
-            return "Просмотр встречи";
+            return "Просмотр встречи.";
         }
 
         protected override CommandResult GetConsoleCommandResult(string? value)
         {
             Console.Clear();
+
+            Console.WriteLine("Просмотр встречи");
+            Console.WriteLine(new string('-', 40));
 
             var meeting = string.IsNullOrEmpty(value) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(value) ?? new MeetingInput();
 
@@ -76,6 +79,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             Console.WriteLine();
             Console.WriteLine($"Уведомление: {(meetingDTO.MeetingNotification != null ? meetingDTO.MeetingNotification.NotificationTime.ToString("dd.MM.yyyy HH:mm") : "Отсутствует")}");
+            Console.WriteLine();
 
             return new CommandResult
             {

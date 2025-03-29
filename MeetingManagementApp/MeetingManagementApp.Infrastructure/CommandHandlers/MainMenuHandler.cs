@@ -12,12 +12,14 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
         public override string? GetCommandDescription()
         {
-            return "Главное меню";
+            return "Главное меню.";
         }
 
         protected override CommandResult GetConsoleCommandResult(string? value)
         {
             Console.Clear();
+
+            Console.WriteLine("Главное меню");
 
             return new CommandResult();
         }

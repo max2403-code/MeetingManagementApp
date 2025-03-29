@@ -37,6 +37,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
         {
             Console.Clear();
 
+            Console.WriteLine("Редактировать встречу");
+            Console.WriteLine(new string('-', 40));
+
             var meeting = string.IsNullOrEmpty(value) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(value) ?? new MeetingInput();
 
             if (meeting.IsFirstCommandCall)

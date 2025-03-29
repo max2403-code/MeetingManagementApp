@@ -26,6 +26,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
         {
             Console.Clear();
 
+            Console.WriteLine("Показать встречи на конкретную дату");
+            Console.WriteLine(new string('-', 40));
+
             var meeting = string.IsNullOrEmpty(value) ? new MeetingInput() : JsonSerializer.Deserialize<MeetingInput>(value) ?? new MeetingInput();
 
             if (meeting.IsFirstCommandCall)
@@ -57,15 +60,17 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers
 
             var meetings = _meetingController.GetMeetingsOnDate(onDate.Value);
 
-            Console.WriteLine();
 
             if (meetings.Count == 0)
+            {
+                Console.WriteLine();
                 Console.WriteLine("Встречи отсутствуют.");
+            }
             else
                 foreach (var item in meetings)
                 {
                     Console.WriteLine();
-                    Console.WriteLine(new string('-', 20));
+                    Console.WriteLine(new string('-', 40));
 
                     Console.WriteLine();
                     Console.WriteLine($"Номер встречи: {item.Id}");
