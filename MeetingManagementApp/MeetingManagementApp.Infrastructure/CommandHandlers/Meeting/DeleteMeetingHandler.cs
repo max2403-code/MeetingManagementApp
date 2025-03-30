@@ -41,7 +41,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Meeting
             if (!meeting.Id.HasValue)
                 throw new Exception("Невозможно удалить встречу.");
 
-            var result = _meetingController.RemoveMeeting(meeting.Id.Value);
+            var result = _meetingController.DeleteMeeting(meeting.Id.Value);
 
             if (result)
                 Console.WriteLine("Встреча успешно удалена.");

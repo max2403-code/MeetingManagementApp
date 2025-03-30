@@ -58,70 +58,6 @@ namespace MeetingManagementApp.Infrastructure.Services
             return entityIndex;
         }
 
-        public string? ValidateMeetingSubject(string? subject)
-        {
-            if (string.IsNullOrEmpty(subject))
-                return "Заголовок встречи должен быть заполнен.";
-            return null;
-        }
-
-        public string? ValidateMeetingDescription(string? description)
-        {
-            if (string.IsNullOrEmpty(description))
-                return "Заголовок встречи должен быть заполнен.";
-            return null;
-        }
-
-        public string? ValidateMeetingMeetingOnDate(DateTime onDate)
-        {
-            if (onDate.Date < DateTime.Today)
-                return "Встречу можно планировать только в будущем.";
-            return null;
-        }
-
-        public string? ValidateMeetingMeetingStart(DateTime meetingStart, int? meetingId = null)
-        {
-            if (meetingStart < DateTime.Now)
-                return "Встречу можно планировать только в будущем.";
-
-            var isMeetingExist = meetingId.HasValue 
-                ? _context.Meetings.Values.Where(x => x.Id != meetingId.Value).Any(x => x.MeetingStart <= meetingStart && x.MeetingEnd >= meetingStart) 
-                : _context.Meetings.Values.Any(x => x.MeetingStart <= meetingStart && x.MeetingEnd >= meetingStart);
-
-            if (isMeetingExist)
-                return "На данный промежуток времени уже запланирована другая встреча.";
-
-            return null;
-        }
-
-        public string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd, int? meetingId = null)
-        {
-            if (meetingEnd <= meetingStart)
-                return "Окончание встречи не может быть равно или раньше ее начала.";
-
-            var isMeetingExist = meetingId.HasValue 
-                ? _context.Meetings.Values.Where(x => x.Id != meetingId.Value).Any(x =>
-                x.MeetingStart <= meetingEnd && x.MeetingEnd >= meetingEnd ||
-                x.MeetingStart >= meetingStart && x.MeetingEnd <= meetingEnd)
-                : _context.Meetings.Values.Any(x => 
-                x.MeetingStart <= meetingEnd && x.MeetingEnd >= meetingEnd || 
-                x.MeetingStart >= meetingStart && x.MeetingEnd <= meetingEnd);
-
-            if (isMeetingExist)
-                return "На данный промежуток времени уже запланирована другая встреча.";
-
-            return null;
-        }
-
-        public bool RemoveMeeting(int id) 
-        {
-            var result = _context.Meetings.Remove(id);
-
-            _notificationService.RemoveMeetingNotification(id);
-
-            return result;
-        }
-
         public (int result, bool isNotificationDeleted) UpdateMeeting(MeetingDTO meeting)
         {
             if (!meeting.Id.HasValue)
@@ -140,6 +76,15 @@ namespace MeetingManagementApp.Infrastructure.Services
                 isNotificationDeleted = _notificationService.RemoveMeetingNotification(meeting.Id.Value);
 
             return (1, isNotificationDeleted);
+        }
+
+        public bool RemoveMeeting(int id) 
+        {
+            var result = _context.Meetings.Remove(id);
+
+            _notificationService.RemoveMeetingNotification(id);
+
+            return result;
         }
 
         public MeetingDTO GetMeetingById(int id, DateTime? onDate = null)
@@ -186,8 +131,6 @@ namespace MeetingManagementApp.Infrastructure.Services
 
             await streamWriter.WriteLineAsync($"Список встреч за {onDate:dd.MM.yyyy}:");
 
-            await Task.Delay(5000);
-
             if (items.Count == 0)
             {
                 await streamWriter.WriteLineAsync();
@@ -219,8 +162,62 @@ namespace MeetingManagementApp.Infrastructure.Services
             var t1 = _context.SaveMeetingStorageInfoAsync();
             var t2 = _context.SaveMeetingNotificationsStorageInfoAsync();
 
-
             await Task.WhenAll(t1, t2);
+        }
+
+        public string? ValidateMeetingSubject(string? subject)
+        {
+            if (string.IsNullOrEmpty(subject))
+                return "Заголовок встречи должен быть заполнен.";
+            return null;
+        }
+
+        public string? ValidateMeetingDescription(string? description)
+        {
+            if (string.IsNullOrEmpty(description))
+                return "Заголовок встречи должен быть заполнен.";
+            return null;
+        }
+
+        public string? ValidateMeetingOnDate(DateTime onDate)
+        {
+            if (onDate.Date < DateTime.Today)
+                return "Встречу можно планировать только в будущем.";
+            return null;
+        }
+
+        public string? ValidateMeetingStart(DateTime meetingStart, int? meetingId = null)
+        {
+            if (meetingStart < DateTime.Now)
+                return "Встречу можно планировать только в будущем.";
+
+            var isMeetingExist = meetingId.HasValue
+                ? _context.Meetings.Values.Where(x => x.Id != meetingId.Value).Any(x => x.MeetingStart <= meetingStart && x.MeetingEnd >= meetingStart)
+                : _context.Meetings.Values.Any(x => x.MeetingStart <= meetingStart && x.MeetingEnd >= meetingStart);
+
+            if (isMeetingExist)
+                return "На данный промежуток времени уже запланирована другая встреча.";
+
+            return null;
+        }
+
+        public string? ValidateMeetingEnd(DateTime meetingStart, DateTime meetingEnd, int? meetingId = null)
+        {
+            if (meetingEnd <= meetingStart)
+                return "Окончание встречи не может быть равно или раньше ее начала.";
+
+            var isMeetingExist = meetingId.HasValue
+                ? _context.Meetings.Values.Where(x => x.Id != meetingId.Value).Any(x =>
+                x.MeetingStart <= meetingEnd && x.MeetingEnd >= meetingEnd ||
+                x.MeetingStart >= meetingStart && x.MeetingEnd <= meetingEnd)
+                : _context.Meetings.Values.Any(x =>
+                x.MeetingStart <= meetingEnd && x.MeetingEnd >= meetingEnd ||
+                x.MeetingStart >= meetingStart && x.MeetingEnd <= meetingEnd);
+
+            if (isMeetingExist)
+                return "На данный промежуток времени уже запланирована другая встреча.";
+
+            return null;
         }
     }
 }

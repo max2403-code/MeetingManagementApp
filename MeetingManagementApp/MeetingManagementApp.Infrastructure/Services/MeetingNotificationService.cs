@@ -10,7 +10,11 @@ namespace MeetingManagementApp.Infrastructure.Services
     {
         private readonly MeetingStorageContext _context;
         private readonly ConcurrentDictionary<int, MeetingNotificationDTO> _notifications;
-        private readonly int _delay = 10;
+
+        /// <summary>
+        /// Диапазон отлавливания напоминаний для отправки.
+        /// </summary>
+        private readonly int _timeRange = 10;
 
         public MeetingNotificationService(MeetingStorageContext context)
         {
@@ -46,6 +50,33 @@ namespace MeetingManagementApp.Infrastructure.Services
             return 1;
         }
 
+        public bool RemoveMeetingNotification(int meetingId)
+        {
+            var result = _context.MeetingNotifications.Remove(meetingId) && _notifications.Remove(meetingId, out MeetingNotificationDTO? value);
+
+            return result;
+        }
+
+        public MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId)
+        {
+            if (!_context.MeetingNotifications.TryGetValue(meetingId, out var value) || value == null)
+                throw new Exception("Запрашиваемое уведомление отсутствует.");
+
+            return new MeetingNotificationDTO
+            {
+                MeetingId = meetingId,
+                NotificationTime = value.NotificationTime
+            } ;
+        }
+
+        public IReadOnlyCollection<MeetingNotificationDTO> GetMeetingNotificationsWithTimeRange()
+        {
+            var notificationRangeFrom = DateTime.Now;
+            var notificationRangeTo = notificationRangeFrom.AddSeconds(_timeRange);
+
+            return _notifications.Where(x => x.Value.NotificationTime >= notificationRangeFrom && x.Value.NotificationTime <= notificationRangeTo).Select(x => x.Value).ToArray();
+        }
+
         public string? ValidateMeetingNotificationTime(DateTime notificationTime, int meetingId)
         {
             if (!_context.Meetings.TryGetValue(meetingId, out var meeting))
@@ -66,33 +97,6 @@ namespace MeetingManagementApp.Infrastructure.Services
                 return "Указана неверная дата уведомления.";
 
             return null;
-        }
-
-        public bool RemoveMeetingNotification(int meetingId)
-        {
-            var result = _context.MeetingNotifications.Remove(meetingId) && _notifications.Remove(meetingId, out MeetingNotificationDTO? value);
-
-            return result;
-        }
-
-        public IReadOnlyCollection<MeetingNotificationDTO> GetMeetingNotifications()
-        {
-            var notificationRangeFrom = DateTime.Now;
-            var notificationRangeTo = notificationRangeFrom.AddSeconds(_delay);
-
-            return _notifications.Where(x => x.Value.NotificationTime >= notificationRangeFrom && x.Value.NotificationTime <= notificationRangeTo).Select(x => x.Value).ToArray();
-        }
-
-        public MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId)
-        {
-            if (!_context.MeetingNotifications.TryGetValue(meetingId, out var value) || value == null)
-                throw new Exception("Запрашиваемое уведомление отсутствует.");
-
-            return new MeetingNotificationDTO
-            {
-                MeetingId = meetingId,
-                NotificationTime = value.NotificationTime
-            } ;
         }
     }
 }

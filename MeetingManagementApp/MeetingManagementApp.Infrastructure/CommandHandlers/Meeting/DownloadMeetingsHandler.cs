@@ -58,6 +58,8 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Meeting
 
             saveMeetingsOnDateFileTask.Wait();
 
+            Console.WriteLine();
+
             Console.WriteLine("Файл успешно сохранен.");
 
             return new CommandResult();

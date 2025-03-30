@@ -4,11 +4,13 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MeetingManagementApp.Infrastructure.Controllers
 {
+    /// <summary>
+    /// Формально необходим для вызовов внутри обработчика в консоли, промежуточное звено между консолью и сервисами.
+    /// </summary>
     internal class MeetingController : IMeetingController
     {
         private readonly IMeetingService _meetingService;
         private readonly INotificationService _notificationService;
-
 
         public MeetingController(IMeetingService meetingService, INotificationService notificationService)
         {
@@ -16,24 +18,31 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             _notificationService = notificationService;
         }
 
-        public int AddNewMeeting(MeetingDTO meeting)
-        {
-            return _meetingService.AddNewMeeting(meeting);
-        }
-
-        public MeetingDTO GetMeetingById(int id, DateTime? onDate = null)
-        {
-            return _meetingService.GetMeetingById(id, onDate);
-        }
+        #region Meeting
 
         public IReadOnlyCollection<MeetingDTO> GetMeetingsOnDate(DateTime date)
         {
             return _meetingService.GetMeetingsOnDate(date);
         }
 
-        public bool RemoveMeeting(int id)
+        public int AddNewMeeting(MeetingDTO meeting)
+        {
+            return _meetingService.AddNewMeeting(meeting);
+        }
+
+        public (int result, bool isNotificationDeleted) UpdateMeeting(MeetingDTO meeting)
+        {
+            return _meetingService.UpdateMeeting(meeting);
+        }
+
+        public bool DeleteMeeting(int id)
         {
             return _meetingService.RemoveMeeting(id);
+        }
+
+        public MeetingDTO GetMeetingById(int id, DateTime? onDate = null)
+        {
+            return _meetingService.GetMeetingById(id, onDate);
         }
 
         public async Task<int> SaveMeetingsOnDateFileAsync(DateTime onDate, string folderPath)
@@ -43,9 +52,9 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             return 1;
         }
 
-        public (int result, bool isNotificationDeleted) UpdateMeeting(MeetingDTO meeting)
+        public string? ValidateMeetingSubject(string? subject)
         {
-            return _meetingService.UpdateMeeting(meeting);
+            return _meetingService.ValidateMeetingSubject(subject);
         }
 
         public string? ValidateMeetingDescription(string? description)
@@ -53,29 +62,43 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             return _meetingService.ValidateMeetingDescription(description);
         }
 
-        public string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd, int? meetingId = null)
-        {
-            return _meetingService.ValidateMeetingMeetingEnd(meetingStart, meetingEnd, meetingId);
-        }
-
         public string? ValidateMeetingMeetingStart(DateTime meetingStart, int? meetingId = null)
         {
-            return _meetingService.ValidateMeetingMeetingStart(meetingStart, meetingId);
+            return _meetingService.ValidateMeetingStart(meetingStart, meetingId);
         }
 
-        public string? ValidateMeetingSubject(string? subject)
+        public string? ValidateMeetingMeetingEnd(DateTime meetingStart, DateTime meetingEnd, int? meetingId = null)
         {
-            return _meetingService.ValidateMeetingSubject(subject);
+            return _meetingService.ValidateMeetingEnd(meetingStart, meetingEnd, meetingId);
         }
 
         public string? ValidateMeetingMeetingOnDate(DateTime onDate)
         {
-            return _meetingService.ValidateMeetingMeetingOnDate(onDate);
+            return _meetingService.ValidateMeetingOnDate(onDate);
         }
 
-        public bool RemoveMeetingNotification(int meetingId)
+        #endregion
+
+        #region Meeting Notification
+
+        public int AddNewMeetingNotification(MeetingNotificationDTO notification)
+        {
+            return _notificationService.AddNewMeetingNotification(notification);
+        }
+
+        public int UpdateMeetingNotification(MeetingNotificationDTO notification)
+        {
+            return _notificationService.UpdateMeetingNotification(notification);
+        }
+
+        public bool DeleteMeetingNotification(int meetingId)
         {
             return _notificationService.RemoveMeetingNotification(meetingId);
+        }
+
+        public MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId)
+        {
+            return _notificationService.GetMeetingNotificationByMeetingId(meetingId);
         }
 
         public string? ValidateMeetingNotificationTime(DateTime notificationTime, int meetingId)
@@ -88,19 +111,6 @@ namespace MeetingManagementApp.Infrastructure.Controllers
             return _notificationService.ValidateMeetingNotificationOnDate(onDate, meetingId);
         }
 
-        public int AddNewMeetingNotification(MeetingNotificationDTO notification)
-        {
-            return _notificationService.AddNewMeetingNotification(notification);
-        }
-
-        public int UpdateMeetingNotification(MeetingNotificationDTO notification)
-        {
-            return _notificationService.UpdateMeetingNotification(notification);
-        }
-
-        public MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId)
-        {
-            return _notificationService.GetMeetingNotificationByMeetingId(meetingId);
-        }
+        #endregion
     }
 }

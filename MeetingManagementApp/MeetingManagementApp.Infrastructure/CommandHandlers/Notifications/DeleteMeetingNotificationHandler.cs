@@ -2,12 +2,7 @@
 using MeetingManagementApp.Domain.Models.Common;
 using MeetingManagementApp.Domain.Models.Input;
 using MeetingManagementApp.Infrastructure.AbstractHandlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MeetingManagementApp.Infrastructure.CommandHandlers.Notifications
 {
@@ -58,7 +53,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Notifications
             if (!meeting.Id.HasValue)
                 throw new Exception("Невозможно удалить напоминание.");
 
-            var result = _meetingController.RemoveMeetingNotification(meeting.Id.Value);
+            var result = _meetingController.DeleteMeetingNotification(meeting.Id.Value);
+
+            Console.WriteLine();
 
             if (result)
                 Console.WriteLine("Напоминание успешно удалено.");

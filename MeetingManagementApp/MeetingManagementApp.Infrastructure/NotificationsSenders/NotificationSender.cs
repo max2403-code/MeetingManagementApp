@@ -5,6 +5,7 @@ using System.Text.Json;
 
 namespace MeetingManagementApp.Infrastructure.NotificationsSenders
 {
+    // TODO: Лучше перенести в отдельное приложение.
     internal class NotificationSender : IBackgroundService
     {
         private readonly IPrinterService _printerService;
@@ -24,7 +25,7 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
             {
                 try
                 {
-                    var notifications = _notificationService.GetMeetingNotifications();
+                    var notifications = _notificationService.GetMeetingNotificationsWithTimeRange();
 
                     if (notifications.Count == 0)
                         continue;
@@ -43,6 +44,11 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
             }
         }
 
+        /// <summary>
+        /// Обработчик на случай падения сендера.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private CommandResult ExcPrinterHandler(string? value)
         {
             Console.WriteLine();
@@ -52,6 +58,11 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
             return new CommandResult();
         }
 
+        /// <summary>
+        /// Инструкции для обработчика уведомления.
+        /// </summary>
+        /// <param name="notificationsJson"></param>
+        /// <returns></returns>
         private CommandResult PrinterHandler(string? notificationsJson)
         {
             try

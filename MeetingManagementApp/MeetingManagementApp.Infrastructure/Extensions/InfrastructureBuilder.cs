@@ -21,31 +21,22 @@ namespace MeetingManagementApp.Infrastructure.Extensions
             services.AddSingleton<IMeetingController, MeetingController>();
 
             services.AddSingleton<ICommandRequestHandler, MainMenuHandler>();
-
-            services.AddSingleton<ICommandRequestHandler, MeetingsOnDateHandler>();
-
-            services.AddSingleton<ICommandRequestHandler, AddNewMeetingHandler>();
-
-            services.AddSingleton<ICommandRequestHandler, DownloadMeetingsHandler>();
-
-            services.AddSingleton<ICommandRequestHandler, ViewMeetingHandler>();
-            services.AddSingleton<ICommandRequestHandler, UpdateMeetingHandler>();
-
-            services.AddSingleton<ICommandRequestHandler, ExceptionHandler>();
             services.AddSingleton<ICommandRequestHandler, ExitHandler>();
 
-
-
+            services.AddSingleton<ICommandRequestHandler, AddNewMeetingHandler>();
+            services.AddSingleton<ICommandRequestHandler, UpdateMeetingHandler>();
             services.AddSingleton<ICommandRequestHandler, DeleteMeetingHandler>();
-            services.AddSingleton<ICommandRequestHandler, UserInputExceptionHandler>();
+            services.AddSingleton<ICommandRequestHandler, ViewMeetingHandler>();
+            services.AddSingleton<ICommandRequestHandler, MeetingsOnDateHandler>();
+            services.AddSingleton<ICommandRequestHandler, DownloadMeetingsHandler>();
 
             services.AddSingleton<ICommandRequestHandler, AddNewMeetingNotificationHandler>();
             services.AddSingleton<ICommandRequestHandler, UpdateMeetingNotificationHandler>();
             services.AddSingleton<ICommandRequestHandler, DeleteMeetingNotificationHandler>();
             services.AddSingleton<ICommandRequestHandler, ViewMeetingNotificationHandler>();
 
-
-
+            services.AddSingleton<ICommandRequestHandler, ExceptionHandler>();
+            services.AddSingleton<ICommandRequestHandler, UserInputExceptionHandler>();
         }
     }
 }

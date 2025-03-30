@@ -14,6 +14,9 @@ namespace MeetingManagementApp.Api.MeetingApp
             _handlers = handlers.ToDictionary(k => k.GetCommand());
         }
 
+        /// <summary>
+        /// Запуск инструкций приложения.
+        /// </summary>
         public void Run()
         {
             var startHandler = _handlers["m"];
@@ -35,7 +38,7 @@ namespace MeetingManagementApp.Api.MeetingApp
                     handler = commandResult.NextCommandRequestHandler;
                     commandResultValue = commandResult.Result;
                 }
-                catch(UserInputException ex)
+                catch(UserInputException ex) // При ошибке ввода можно либо выйти в главное меню либо повторить текущую команда с сохраненными корректными данными ввода.
                 {
                     var exCommandResult = userInputExceptionHandler.Execute(ex.Message, _handlers);
 
@@ -47,10 +50,10 @@ namespace MeetingManagementApp.Api.MeetingApp
                    else
                         commandResultValue = ex.Value;
                 }
-                catch(Exception ex) 
+                catch(Exception ex) // Сразу выход в главное меню.
                 {
                     exceptionHandler.Execute(ex.Message, _handlers);
-                    handler = startHandler; //exCommandResult.NextCommandRequestHandler;
+                    handler = startHandler;
                     commandResultValue = null;
                 }
             }

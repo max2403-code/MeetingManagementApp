@@ -41,6 +41,12 @@ namespace MeetingManagementApp.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// Метод для корректного и однотипного вызова команд.
+        /// </summary>
+        /// <param name="handlers"></param>
+        /// <param name="commands"></param>
+        /// <returns></returns>
         private string? GetUserCommand(IReadOnlyDictionary<string, ICommandRequestHandler> handlers, IReadOnlyCollection<string> commands) 
         {
             Console.WriteLine(new string('-', 40));

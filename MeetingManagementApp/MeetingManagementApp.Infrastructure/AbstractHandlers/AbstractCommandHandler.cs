@@ -31,8 +31,18 @@ namespace MeetingManagementApp.Infrastructure.AbstractHandlers
             };
         }
 
+        /// <summary>
+        /// Выполнение инструкций внутри команды.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected abstract CommandResult GetConsoleCommandResult(string? value);
 
+        /// <summary>
+        /// Получить список наименований доступных команд в консоли.
+        /// </summary>
+        /// <param name="requestValue"></param>
+        /// <returns></returns>
         protected abstract IReadOnlyCollection<string> GetAllowedCommands(string? requestValue);
 
         public abstract string? GetCommandDescription();
