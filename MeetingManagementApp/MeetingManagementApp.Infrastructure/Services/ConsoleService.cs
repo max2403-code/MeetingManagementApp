@@ -5,25 +5,39 @@ namespace MeetingManagementApp.Infrastructure.Services
 {
     internal class ConsoleService : IPrinterService
     {
-        private readonly object _locker = new();
+        private readonly Mutex _mutex = new Mutex();
 
         public CommandResult PrinterExecute(string? value,
             Func<string?, CommandResult> func,
             IReadOnlyDictionary<string, ICommandRequestHandler>? handlers = null,
             Func<string?, IReadOnlyCollection<string>>? allowCommandFunc = null)
         {
-            lock (_locker)
+            try
             {
+                _mutex.WaitOne();
+
                 var funcValue = func(value);
 
-                if (handlers != null && handlers.Count > 0 && allowCommandFunc != null) 
+                _mutex.ReleaseMutex();
+                // Так сделано для того, чтобы уведомление прилетало либо после выполнения команды, либо после выбора команды
+                _mutex.WaitOne();
+
+                if (handlers != null && handlers.Count > 0 && allowCommandFunc != null)
                 {
                     var allowCommands = allowCommandFunc(funcValue.ResultValue);
 
                     funcValue.Command = GetUserCommand(handlers, allowCommands);
                 }
-                
+
                 return funcValue;
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                _mutex.ReleaseMutex(); 
             }
         }
 

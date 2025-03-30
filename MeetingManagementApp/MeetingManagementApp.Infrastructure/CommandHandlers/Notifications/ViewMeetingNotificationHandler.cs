@@ -49,8 +49,6 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Notifications
             if (!meeting.Id.HasValue)
                 throw new Exception("Невозможно посмотреть напоминание.");
 
-            Console.WriteLine();
-
             var meetingNotificationDTO = _meetingController.GetMeetingNotificationByMeetingId(meeting.Id.Value) ?? throw new Exception("Невозможно посмотреть напоминание.");
 
             Console.WriteLine();

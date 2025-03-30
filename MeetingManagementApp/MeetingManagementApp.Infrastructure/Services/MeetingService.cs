@@ -22,7 +22,7 @@ namespace MeetingManagementApp.Infrastructure.Services
             var dateTo = dateFrom.AddDays(1);
 
             return _context.Meetings.Values
-                .Where(x => date >= dateFrom && date < dateTo)
+                .Where(x => x.MeetingStart >= dateFrom && x.MeetingStart < dateTo)
                 .OrderBy(x => x.MeetingStart)
                 .Select(x => new MeetingDTO
                 {
@@ -212,6 +212,15 @@ namespace MeetingManagementApp.Infrastructure.Services
                 await streamWriter.WriteLineAsync();
                 await streamWriter.WriteLineAsync($"Описание: {item.Description}");
             }
+        }
+
+        public async Task SaveStorageInfoAsync()
+        {
+            var t1 = _context.SaveMeetingStorageInfoAsync();
+            var t2 = _context.SaveMeetingNotificationsStorageInfoAsync();
+
+
+            await Task.WhenAll(t1, t2);
         }
     }
 }

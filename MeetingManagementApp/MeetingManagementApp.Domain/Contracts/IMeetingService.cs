@@ -25,5 +25,7 @@ namespace MeetingManagementApp.Domain.Contracts
         MeetingDTO GetMeetingById(int id, DateTime? onDate = null);
 
         Task SaveMeetingsOnDateFileAsync(DateTime onDate, string folderPath);
+
+        Task SaveStorageInfoAsync();
     }
 }

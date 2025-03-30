@@ -54,9 +54,9 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Meeting
             if (string.IsNullOrEmpty(path) || !Path.IsPathRooted(path) || !Directory.Exists(path))
                 throw new UserInputException("Указан неверный путь.", JsonSerializer.Serialize(meeting));
 
-            var t = _meetingController.SaveMeetingsOnDateFileAsync(meeting.OnDate.Value, path);
+            var saveMeetingsOnDateFileTask = _meetingController.SaveMeetingsOnDateFileAsync(meeting.OnDate.Value, path);
 
-            t.Wait();
+            saveMeetingsOnDateFileTask.Wait();
 
             Console.WriteLine("Файл успешно сохранен.");
 

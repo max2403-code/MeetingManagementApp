@@ -6,14 +6,20 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Common
     internal class ExitHandler : ICommandRequestHandler
     {
         private readonly IPrinterService _consoleService;
+        private readonly IMeetingService _meetingService;
 
-        public ExitHandler(IPrinterService consoleService)
+        public ExitHandler(IPrinterService consoleService, IMeetingService meetingService)
         {
             _consoleService = consoleService;
+            _meetingService = meetingService;
         }
 
         public CommandHandlerResult Execute(string? requestValue, IReadOnlyDictionary<string, ICommandRequestHandler> handlers)
         {
+            var saveStorageInfoTask = _meetingService.SaveStorageInfoAsync();
+
+            saveStorageInfoTask.Wait();
+
             var rval = _consoleService.PrinterExecute(requestValue, GetConsoleCommandResult);
 
             return new CommandHandlerResult();

@@ -55,7 +55,7 @@ namespace MeetingManagementApp.Api.MeetingApp
                 }
             }
 
-            //реализовать запись в хранилище
+
         }
     }
 }

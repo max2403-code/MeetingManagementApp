@@ -22,43 +22,70 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
         {
             while (true)
             {
-                var notifications = _notificationService.GetMeetingNotifications();
+                try
+                {
+                    var notifications = _notificationService.GetMeetingNotifications();
 
-                if (notifications.Count == 0)
-                    continue;
+                    if (notifications.Count == 0)
+                        continue;
 
-                foreach (var notification in notifications)
-                    _notificationService.RemoveMeetingNotification(notification.MeetingId);
+                    foreach (var notification in notifications)
+                        _notificationService.RemoveMeetingNotification(notification.MeetingId);
 
-                var notificationsJson = JsonSerializer.Serialize(notifications);
-                Task.Run(() => _printerService.PrinterExecute(notificationsJson, PrinterHandler));
+                    var notificationsJson = JsonSerializer.Serialize(notifications);
+                    Task.Run(() => _printerService.PrinterExecute(notificationsJson, PrinterHandler));
+                }
+                catch
+                {
+                    _printerService.PrinterExecute(null, ExcPrinterHandler);
+                    break;
+                }
             }
+        }
+
+        private CommandResult ExcPrinterHandler(string? value)
+        {
+            Console.WriteLine();
+
+            Console.WriteLine("Отправка напоминаний экстренно прекращена вследствие ошибки!");
+
+            return new CommandResult();
         }
 
         private CommandResult PrinterHandler(string? notificationsJson)
         {
-            var notifications = JsonSerializer.Deserialize<IReadOnlyCollection<MeetingNotificationDTO>>(notificationsJson);
-
-            foreach(var notification in notifications)
+            try
             {
-                var meeting = _meetingController.GetMeetingById(notification.MeetingId);
+                var notifications = JsonSerializer.Deserialize<IReadOnlyCollection<MeetingNotificationDTO>>(notificationsJson);
 
-                Console.WriteLine();
+                foreach (var notification in notifications)
+                {
+                    var meeting = _meetingController.GetMeetingById(notification.MeetingId);
 
-                Console.WriteLine(new string('-', 40));
+                    Console.WriteLine();
 
-                Console.WriteLine("Напоминание");
+                    Console.WriteLine(new string('-', 40));
 
-                Console.WriteLine($"{meeting.Subject}");
+                    Console.WriteLine("Напоминание");
 
-                Console.WriteLine($"Время начала встречи: {meeting.MeetingStart:dd.MM.yyyy HH:mm}");
+                    Console.WriteLine($"{meeting.Subject}");
 
-                Console.WriteLine(new string('-', 40));
+                    Console.WriteLine($"Время начала встречи: {meeting.MeetingStart:dd.MM.yyyy HH:mm}");
 
-                Console.WriteLine();
+                    Console.WriteLine(new string('-', 40));
+
+                    Console.WriteLine();
+                }
             }
-
-            Console.ReadKey();
+            catch
+            {
+                Console.WriteLine();
+                Console.WriteLine("Ошибка при отправке уведомлений!");
+            }
+            finally
+            {
+                Console.ReadKey();
+            }
 
             return new CommandResult();
         }
