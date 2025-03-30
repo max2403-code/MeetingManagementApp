@@ -57,8 +57,6 @@ namespace MeetingManagementApp.Api.MeetingApp
                     commandResultValue = null;
                 }
             }
-
-
         }
     }
 }
