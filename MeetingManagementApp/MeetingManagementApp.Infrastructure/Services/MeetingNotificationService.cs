@@ -60,7 +60,7 @@ namespace MeetingManagementApp.Infrastructure.Services
         public MeetingNotificationDTO GetMeetingNotificationByMeetingId(int meetingId)
         {
             if (!_context.MeetingNotifications.TryGetValue(meetingId, out var value) || value == null)
-                throw new Exception("Запрашиваемое уведомление отсутствует.");
+                throw new Exception("Запрашиваемое напоминание отсутствует.");
 
             return new MeetingNotificationDTO
             {
@@ -74,16 +74,20 @@ namespace MeetingManagementApp.Infrastructure.Services
             var notificationRangeFrom = DateTime.Now;
             var notificationRangeTo = notificationRangeFrom.AddSeconds(_timeRange);
 
-            return _notifications.Where(x => x.Value.NotificationTime >= notificationRangeFrom && x.Value.NotificationTime <= notificationRangeTo).Select(x => x.Value).ToArray();
+            return _notifications
+                .Where(x => x.Value.NotificationTime >= notificationRangeFrom && x.Value.NotificationTime <= notificationRangeTo)
+                .Select(x => x.Value)
+                .OrderBy(x => x.NotificationTime)
+                .ToArray();
         }
 
         public string? ValidateMeetingNotificationTime(DateTime notificationTime, int meetingId)
         {
             if (!_context.Meetings.TryGetValue(meetingId, out var meeting))
-                return "Встречи для данного уведомления не существует.";
+                return "Встречи для данного напоминания не существует.";
 
             if (notificationTime < DateTime.Now || notificationTime > meeting.MeetingStart)
-                return "Указано неверное время уведомления.";
+                return "Указано неверное время напоминания.";
 
             return null;
         }
@@ -91,10 +95,10 @@ namespace MeetingManagementApp.Infrastructure.Services
         public string? ValidateMeetingNotificationOnDate(DateTime onDate, int meetingId)
         {
             if (!_context.Meetings.TryGetValue(meetingId, out var meeting))
-                return "Встречи для данного уведомления не существует.";
+                return "Встречи для данного напоминания не существует.";
 
             if (onDate < DateTime.Today || onDate > meeting.MeetingStart.Date)
-                return "Указана неверная дата уведомления.";
+                return "Указана неверная дата напоминания.";
 
             return null;
         }

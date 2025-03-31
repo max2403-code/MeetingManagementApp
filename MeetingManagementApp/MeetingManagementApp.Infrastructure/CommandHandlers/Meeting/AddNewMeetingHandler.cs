@@ -51,7 +51,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Meeting
             }
             else
             {
-                Console.Write("Введите дату: ");
+                Console.Write($"Введите дату (например, {DateTime.Today:dd.MM.yyyy}): ");
 
                 var onDateInput = Console.ReadLine()?.Split(".");
 
@@ -123,7 +123,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Meeting
             }
             else
             {
-                Console.Write("Введите время начала встречи: ");
+                Console.Write("Введите время начала встречи (например, 12:00): ");
 
                 var meetingStartInput = Console.ReadLine();
 
@@ -150,7 +150,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Meeting
             }
             else
             {
-                Console.Write("Введите примерное время окончания встречи: ");
+                Console.Write("Введите примерное время окончания встречи (например, 13:00): ");
 
                 var meetingEndInput = Console.ReadLine();
                 meetingEnd = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("yyyy-MM-dd"), meetingEndInput + ":00"), CultureInfo.InvariantCulture, out var val) ? val : throw new UserInputException("Введено неверное время окончания встречи.", JsonSerializer.Serialize(meeting));

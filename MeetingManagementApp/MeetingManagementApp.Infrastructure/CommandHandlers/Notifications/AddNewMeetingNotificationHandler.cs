@@ -37,7 +37,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Notifications
         {
             Console.Clear();
 
-            Console.WriteLine("Добавить напоминание о встрече ");
+            Console.WriteLine("Добавить напоминание о встрече");
             Console.WriteLine(new string('-', 40));
 
             var newMeeting = new MeetingInput
@@ -73,7 +73,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Notifications
             }
             else
             {
-                Console.Write("Введите дату напоминания: ");
+                Console.Write($"Введите дату напоминания (например, {DateTime.Today:dd.MM.yyyy}): ");
 
                 var onDateInput = Console.ReadLine()?.Split(".");
 
@@ -99,7 +99,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Notifications
             }
             else
             {
-                Console.Write("Введите время напоминания: ");
+                Console.Write("Введите время напоминания (например, 11:00): ");
 
                 var notificationTimeInput = Console.ReadLine();
                 notificationTime = DateTime.TryParse(string.Join(" ", onDate.Value.ToString("yyyy-MM-dd"), CultureInfo.InvariantCulture, notificationTimeInput + ":00"), out var val) ? val : throw new UserInputException("Введено неверное время напоминания.", JsonSerializer.Serialize(meeting));

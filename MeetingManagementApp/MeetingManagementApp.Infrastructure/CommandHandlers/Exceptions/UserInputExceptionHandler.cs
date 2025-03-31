@@ -34,7 +34,7 @@ namespace MeetingManagementApp.Infrastructure.CommandHandlers.Exceptions
             Console.WriteLine($"Ошибка: {value}");
 
             Console.WriteLine($"Для повтора последней операции нажмите Enter...");
-            Console.WriteLine($"Для выхода в главное меню нажмите на любую клавишу...");
+            Console.WriteLine($"Для выхода в главное меню наберите любой текст и нажмите Enter...");
 
             var input = Console.ReadLine();
 

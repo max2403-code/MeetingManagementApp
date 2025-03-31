@@ -55,6 +55,8 @@ namespace MeetingManagementApp.Infrastructure.NotificationsSenders
 
             Console.WriteLine("Отправка напоминаний экстренно прекращена вследствие ошибки!");
 
+            Console.ReadKey();
+
             return new CommandResult();
         }
 
